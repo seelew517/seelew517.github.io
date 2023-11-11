@@ -4,11 +4,11 @@
   
     
     <entry>
-      <title>test1</title>
-      <link href="/2023/11/11/test1/"/>
-      <url>/2023/11/11/test1/</url>
+      <title>testimg</title>
+      <link href="/2023/11/11/testimg/"/>
+      <url>/2023/11/11/testimg/</url>
       
-        <content type="html"><![CDATA[<h1 id="test-img"><a href="#test-img" class="headerlink" title="test img"></a>test img</h1><p><img src="/1.png"></p><p><img src="/2.png"></p>]]></content>
+        <content type="html"><![CDATA[<p><img src="/2023/11/11/testimg/1.png" alt="1"></p><p><img src="/2023/11/11/testimg/2.png" alt="2"></p>]]></content>
       
       
       <categories>
