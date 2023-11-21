@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>Computer Networking:A Top-Down Approach 8th Edition</title>
+      <link href="/2023/11/21/Computer%20Networking%EF%BC%9AA%20Top-Down%20Approach%208th%20Edition/"/>
+      <url>/2023/11/21/Computer%20Networking%EF%BC%9AA%20Top-Down%20Approach%208th%20Edition/</url>
+      
+        <content type="html"><![CDATA[<h1 id="1-Computer-Networks-and-the-Internet"><a href="#1-Computer-Networks-and-the-Internet" class="headerlink" title="1 Computer Networks and the Internet"></a>1 Computer Networks and the Internet</h1><h2 id="1-1-A-Nuts-and-Bolts-Description"><a href="#1-1-A-Nuts-and-Bolts-Description" class="headerlink" title="1.1 A Nuts-and-Bolts Description"></a>1.1 A Nuts-and-Bolts Description</h2><p>互联网是一个计算机网络，将传统计算设备如台式电脑、Linux工作站和所谓的服务器互联起来。如今非传统互联网“物”也在连接到互联网。所有这些设备被称为主机(hosts)和终端系统(end systems)。</p><p>终端系统通过通信链路(communication links)和分组交换机(packet switches)网络连接在一起。</p><p>常见的分组交换机有路由器(routers)和链路层交换机(link-layer switches)。链路层交换机通常用于接入网络，而路由器通常用于网络核心。数据包从发送端系统到接收端系统所经过的通信链路和分组交换机的序列称为网络路由(route)或路径(path)。</p><p>终端系统通过互联网服务提供商(<strong>I</strong>nternet <strong>S</strong>ervice <strong>P</strong>roviders)访问互联网。每个ISP本身就是一个由分组交换机和通信链路组成的网络。ISP向终端系统提供各种类型的网络接入。互联网就是要把终端系统相互连接起来，因此为终端系统提供接入的ISP也必须相互连接。因此，这些低层互联网服务提供商通过国内和国际上层互联网服务提供商实现互联，而这些上层互联网服务提供商则直接相互连接。上层 ISP由高速路由器和高速光纤链路组成。每个ISP网络，无论是上层还是下层，都是独立管理的，运行 IP 协议，并符合特定的命名和地址约定。</p><p>终端系统、分组交换机和互联网的其他部分都运行着控制互联网内信息收发的协议。传输控制协议(<strong>T</strong>ransmission <strong>C</strong>ontrol <strong>P</strong>rotocol)和互联网协议(<strong>I</strong>nternet <strong>P</strong>rotocol)是互联网中最重要的两个协议。IP协议规定了路由器和终端系统之间收发数据包的格式。互联网的主要协议统称为<strong>TCP/IP</strong>。</p><p>The IEEE 802 LAN Standards Committee [IEEE 802 2020], for example, specifies the Ethernet and wireless WiFi standards.</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> blog </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Notes </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>ML作业2</title>
       <link href="/2023/11/12/ML2/"/>
       <url>/2023/11/12/ML2/</url>
