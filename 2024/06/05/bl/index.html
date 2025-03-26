@@ -1,0 +1,430 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Blockchain Consensus Algorithms | Seelew's Blog</title><meta name="author" content="Seelew"><meta name="copyright" content="Seelew"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="区块链共识算法1 摘要区块链共识算法是一种在区块链网络中用于确保所有参与者之间达成一致的机制。它允许分布式网络中的节点在去中心化的情况下，就区块链数据的当前状态达成共识。共识算法的主要目标是确保网络中的每个节点都同意交易记录的顺序和内容，从而维护整个区块链系统的完整性和不可篡改性。如何在不可信节点之间达成共识是拜占庭将军（Byzantine Generals, BG）问题的变体。在BG问题中，一群">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Blockchain Consensus Algorithms">
+<meta property="og:url" content="https://seelew517.github.io/2024/06/05/bl/index.html">
+<meta property="og:site_name" content="Seelew&#39;s Blog">
+<meta property="og:description" content="区块链共识算法1 摘要区块链共识算法是一种在区块链网络中用于确保所有参与者之间达成一致的机制。它允许分布式网络中的节点在去中心化的情况下，就区块链数据的当前状态达成共识。共识算法的主要目标是确保网络中的每个节点都同意交易记录的顺序和内容，从而维护整个区块链系统的完整性和不可篡改性。如何在不可信节点之间达成共识是拜占庭将军（Byzantine Generals, BG）问题的变体。在BG问题中，一群">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://seelew517.github.io/default_cover%20(49).png">
+<meta property="article:published_time" content="2024-06-05T08:48:04.000Z">
+<meta property="article:modified_time" content="2024-06-05T08:48:04.000Z">
+<meta property="article:author" content="Seelew">
+<meta property="article:tag" content="Notes">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://seelew517.github.io/default_cover%20(49).png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://seelew517.github.io/2024/06/05/bl/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  noticeOutdate: {"limitDay":365,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":230},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Seelew","link":"链接: ","source":"来源: Seelew's Blog","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体中文","cht_to_chs":"你已切换为简体中文","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"top-right"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Blockchain Consensus Algorithms',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-06-05 16:48:04'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const now = new Date()
+          const hour = now.getHours()
+          const isNight = hour <= 6 || hour >= 18
+          if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+          else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><link rel="stylesheet" href="/preloadavatar.css"><link rel="stylesheet" href="/css/universe.css"><link rel="stylesheet" href="/css/card.css"><link rel="stylesheet" href="/css/doublerowdebug.css"><link rel="stylesheet" href="/css/fengcheanimation.css"><link rel="stylesheet" href="/css/snow.css"><!-- hexo injector head_end start --><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Zfour/Butterfly-double-row-display@1.00/cardlistpost.min.css"/>
+<style>#recent-posts > .recent-post-item >.recent-post-info > .article-meta-wrap > .tags:before {content:"\A";
+  white-space: pre;}#recent-posts > .recent-post-item >.recent-post-info > .article-meta-wrap > .tags > .article-meta__separator{display:none}</style>
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head><body><!--link(rel='stylesheet' href='https://cdn.jsdelivr.net/npm/macy@2.1.0/dist/macy.min.css')--><!--script(src='https://cdn.jsdelivr.net/npm/macy@2.1.0/dist/macy.min.js')--><div id="loading-box" onclick="document.getElementById(&quot;loading-box&quot;).classList.add(&quot;loaded&quot;)"><div class="loading-bg"><img class="loading-img nolazyload" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/97341554"/><div class="loading-image-dot"></div><div id="loading-percentage">0%</div></div></div><script>const loadingPercentage = document.getElementById("loading-percentage");
+//const now = new Date();
+//const currentHour = now.getHours();
+//const isDaytime = currentHour >= 6 && currentHour < 18;
+//loadingPercentage.style.color = isDaytime ? "#000000" : "#FFFFFF";
+loadingPercentage.style.color = "white";
+let loadingPercentageTimer = setInterval(function() {
+  var progressBar = document.querySelector(".pace-progress");
+  if (!progressBar) return
+  var currentValue = progressBar.getAttribute("data-progress-text");
+  if (currentValue !== loadingPercentage.textContent) {
+    loadingPercentage.textContent = currentValue;
+    if (currentValue === "100%") {
+      clearInterval(loadingPercentageTimer);
+    }
+  }
+}, 100);
+const preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+  }
+}
+window.addEventListener('load',()=> { preloader.endLoading() })
+
+if (true) {
+  document.addEventListener('pjax:send', () => { preloader.initLoading() })
+  document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+}</script><script>window.paceOptions = {
+  restartOnPushState: false
+}
+
+document.addEventListener('pjax:send', () => {
+  Pace.restart()
+})
+</script><link rel="stylesheet" href="/css/progress_bar.css"/><script src="https://cdn.jsdelivr.net/npm/pace-js/pace.min.js"></script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">13</div></a><a href="/%E6%A0%87%E7%AD%BE/"><div class="headline">标签</div><div class="length-num">3</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/default_cover%20(49).png')"><nav id="nav"><span id="blog-info"><a href="/" title="Seelew's Blog"><span class="site-name">Seelew's Blog</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Blockchain Consensus Algorithms</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-06-05T08:48:04.000Z" title="发表于 2024-06-05 16:48:04">2024-06-05</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-06-05T08:48:04.000Z" title="更新于 2024-06-05 16:48:04">2024-06-05</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/blog/">blog</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">5.4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>20分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Blockchain Consensus Algorithms"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="区块链共识算法"><a href="#区块链共识算法" class="headerlink" title="区块链共识算法"></a>区块链共识算法</h1><h2 id="1-摘要"><a href="#1-摘要" class="headerlink" title="1 摘要"></a>1 摘要</h2><p>区块链共识算法是一种在区块链网络中用于确保所有参与者之间达成一致的机制。它允许分布式网络中的节点在去中心化的情况下，就区块链数据的当前状态达成共识。共识算法的主要目标是确保网络中的每个节点都同意交易记录的顺序和内容，从而维护整个区块链系统的完整性和不可篡改性。如何在不可信节点之间达成共识是拜占庭将军（Byzantine Generals, BG）问题的变体。在BG问题中，一群指挥拜占庭军队的将军们包围了一个城市。一些将军倾向于进攻，而另一些则倾向于撤退。然而，如果只有部分将军发起攻击，那么整个攻击就会失败。因此，他们必须达成一个共识，决定是进攻还是撤退。在分布式环境中达成共识是一个挑战。对于区块链来说，这同样是一个挑战，因为区块链网络是分布式的。在区块链中，没有中心节点来确保分布式节点上的账本都是相同的。因此需要一些协议来确保不同节点上的账本保持一致。</p>
+<h2 id="2-共识算法"><a href="#2-共识算法" class="headerlink" title="2 共识算法"></a>2 共识算法</h2><h3 id="2-1-PoW"><a href="#2-1-PoW" class="headerlink" title="2.1 PoW"></a>2.1 PoW</h3><p>工作量证明（PoW，Proof of work）是比特币网络中使用的一种共识策略。在去中心化网络中，需要选择某个节点来记录交易。最简单的方法是随机选择，但随机选择容易受到攻击。因此，如果一个节点想要发布一个交易区块，它必须做很多工作来证明这个节点不太可能攻击网络。通常所说的工作指的是计算机计算。在PoW中，网络中的每个节点都在计算区块头的哈希值。区块头包含一个随机数（nonce），矿工会频繁地改变这个随机数以得到不同的哈希值。共识要求计算出的值必须等于或小于某个给定的值。当一个节点达到目标值时，它会将区块广播给其他节点，所有其他节点必须相互确认哈希值的正确性。如果区块得到验证，其他矿工就会将这个新区块添加到他们自己的区块链上。计算哈希值的节点被称为矿工，而PoW过程在比特币中被称为挖矿。</p>
+<p>在去中心化网络中，当多个节点几乎同时找到一个合适的随机数（nonce）时，可能会同时生成有效的区块。然而，两个竞争的分支同时生成下一个区块的可能性是很小的。在PoW协议中，之后变得更长的链被认为是真实的链。这个过程通常被称为“链的分叉”或“分叉战争”，其中矿工们通过继续在特定分支上挖掘新区块来“投票”决定哪个分支将成为主链。这种机制确保了网络最终能够达成共识，即使在发生临时分叉的情况下。一旦一个分支变得更长，其他矿工就会转换到这个分支上，因为继续在较短的分支上工作将不再经济，因为较长的链代表了网络中的多数算力和共识。矿工们需要进行大量的计算机计算，但这些工作会消耗大量的资源。为了减轻资源浪费，一些PoW协议被设计成其工作可以有其他应用的副产品。例如，Primecoin在挖矿过程中寻找特殊的质数链，这些质数链可以用于数学研究。Primecoin的设计初衷是将挖矿过程中的计算工作转化为对科学有实际贡献的活动。通过寻找所谓的“卡特兰数”（Catalan numbers）和“双链质数”（bi-twin primes），Primecoin的挖矿过程不仅维护了区块链的安全性和去中心化，同时也为数学领域提供了有价值的数据和发现。这种设计试图解决传统PoW挖矿中存在的能源消耗和资源浪费问题，同时为科学研究做出贡献。</p>
+<p> 工作量证明最核心的技术原理是散列函数（哈希）。在比特币中，PoW工作其实就是如何去计算一个区块的目标哈希值问题，让用户进行大量的穷举运算，同时得出这个哈希值还必须满足一些必要条件，这个条件在区块链中其实就是一个难度系数值，通过计算出的哈希值是否符合前面N位全是0，最终达成工作量证明。比如现在给出一个固定的字符串“Hello, blockchain”，现在要求计算的难题是将这个字符串与一个随机数（Nonce）拼接起来，并通过SHA256哈希计算一个固定256位长度的哈希值，如果计算结果得到的前5位全是0，即认为满足计算条件，同时得到的随机数（Nonce）值证明为达成工作量证明的有效随机数。</p>
+<p>PoW速度慢，耗能大，易受“规模经济”（economies of scale）的影响。实例有 Bitcoin、Ethereum、LiteCoin、Dogecoin等。</p>
+<h3 id="2-2-PoS"><a href="#2-2-PoS" class="headerlink" title="2.2 PoS"></a>2.2 PoS</h3><p>权益证明（PoS，Proof of Stake）节能、攻击者代价更大、不易受“规模经济”的影响，是PoW的一种节能替代方案。在PoS中，矿工需要证明他们持有一定数量的货币所有权。普遍认为，拥有更多货币的人不太可能攻击网络。基于账户余额的选择方式相当不公平，因为最富有的个人注定会在网络中占据主导地位。因此，为了解决这个问题，许多解决方案被提出，结合了权益大小来决定谁来铸造下一个区块。Blackcoin使用随机化来预测下一个生成者，寻找最低的哈希值与权益大小的组合。Peercoin则偏好基于币龄的选择。在Peercoin中，持有时间更长、数量更多的货币集合有更大的概率挖掘下一个区块。</p>
+<p>PoS机制通过减少挖矿所需的计算资源，旨在解决PoW挖矿中的能源消耗问题。它通过权益持有量和/或其他因素（如币龄）来选择区块生产者，从而鼓励长期投资并减少网络攻击的可能性。随着区块链技术的发展，越来越多的项目开始探索和采用PoS或其变体作为其共识机制。例如，以太坊计划从Ethash（一种PoW）迁移到Casper（一种PoS）。</p>
+<p>每个旷工都有出块(即挖矿)的权力，只要出块成功，就有系统给出的奖励，这里不需要通过复杂的计算来挖矿，问题只在于谁来出块，股权越大，出块的概率就越大，反之，则相反。POS有很多变种，股权可以是持有币的数量，或者支付的数量等等。</p>
+<p>PoS存在无利害关系（Nothing at stake）攻击问题。实例有Ethereum、Peercoin、Nxt等。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    <span class="string">&quot;time&quot;</span></span><br><span class="line">    <span class="string">&quot;strconv&quot;</span></span><br><span class="line">    <span class="string">&quot;crypto/sha256&quot;</span></span><br><span class="line">    <span class="string">&quot;math/rand&quot;</span></span><br><span class="line">    <span class="string">&quot;fmt&quot;</span></span><br><span class="line">    <span class="string">&quot;encoding/hex&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">//实现pos挖矿的原理</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Block <span class="keyword">struct</span> &#123;</span><br><span class="line">    Index <span class="type">int</span></span><br><span class="line">    Data <span class="type">string</span> <span class="comment">//</span></span><br><span class="line">    PreHash <span class="type">string</span></span><br><span class="line">    Hash <span class="type">string</span></span><br><span class="line">    Timestamp <span class="type">string</span></span><br><span class="line">    <span class="comment">//记录挖矿节点</span></span><br><span class="line">    Validator *Node</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">genesisBlock</span><span class="params">()</span></span> Block  &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> genesBlock  = Block&#123;<span class="number">0</span>, <span class="string">&quot;Genesis block&quot;</span>,<span class="string">&quot;&quot;</span>,<span class="string">&quot;&quot;</span>,time.Now().String(),&amp;Node&#123;<span class="number">0</span>, <span class="number">0</span>, <span class="string">&quot;dd&quot;</span>&#125;&#125;</span><br><span class="line">    genesBlock.Hash = hex.EncodeToString(BlockHash(&amp;genesBlock))</span><br><span class="line">    <span class="keyword">return</span> genesBlock</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">BlockHash</span><span class="params">(block *Block)</span></span> []<span class="type">byte</span>  &#123;</span><br><span class="line">    record := strconv.Itoa(block.Index) + block.Data + block.PreHash + block.Timestamp + block.Validator.Address</span><br><span class="line">    h := sha256.New()</span><br><span class="line">    h.Write([]<span class="type">byte</span>(record))</span><br><span class="line">    hashed := h.Sum(<span class="literal">nil</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> hashed</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//创建全节点类型</span></span><br><span class="line"><span class="keyword">type</span> Node <span class="keyword">struct</span> &#123;</span><br><span class="line">    Tokens <span class="type">int</span> <span class="comment">//持币数量</span></span><br><span class="line">    Days <span class="type">int</span> <span class="comment">//持币时间</span></span><br><span class="line">    Address <span class="type">string</span> <span class="comment">//地址</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//创建5个节点</span></span><br><span class="line"><span class="comment">//算法的实现要满足 持币越多的节点越容易出块</span></span><br><span class="line"><span class="keyword">var</span> nodes = <span class="built_in">make</span>([]Node, <span class="number">5</span>)</span><br><span class="line"><span class="comment">//存放节点的地址</span></span><br><span class="line"><span class="keyword">var</span> addr = <span class="built_in">make</span>([]*Node, <span class="number">15</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">InitNodes</span><span class="params">()</span></span>  &#123;</span><br><span class="line"></span><br><span class="line">    nodes[<span class="number">0</span>] = Node&#123;<span class="number">1</span>, <span class="number">1</span>, <span class="string">&quot;0x12341&quot;</span>&#125;</span><br><span class="line">    nodes[<span class="number">1</span>] = Node&#123;<span class="number">2</span>, <span class="number">1</span>, <span class="string">&quot;0x12342&quot;</span>&#125;</span><br><span class="line">    nodes[<span class="number">2</span>] = Node&#123;<span class="number">3</span>, <span class="number">1</span>, <span class="string">&quot;0x12343&quot;</span>&#125;</span><br><span class="line">    nodes[<span class="number">3</span>] = Node&#123;<span class="number">4</span>, <span class="number">1</span>, <span class="string">&quot;0x12344&quot;</span>&#125;</span><br><span class="line">    nodes[<span class="number">4</span>] = Node&#123;<span class="number">5</span>, <span class="number">1</span>, <span class="string">&quot;0x12345&quot;</span>&#125;</span><br><span class="line"></span><br><span class="line">    cnt :=<span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> i:=<span class="number">0</span>;i&lt;<span class="number">5</span>;i++ &#123;</span><br><span class="line">        <span class="keyword">for</span> j:=<span class="number">0</span>;j&lt;nodes[i].Tokens * nodes[i].Days;j++&#123;</span><br><span class="line">            addr[cnt] = &amp;nodes[i]</span><br><span class="line">            cnt++</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//采用Pos共识算法进行挖矿</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">CreateNewBlock</span><span class="params">(lastBlock *Block, data <span class="type">string</span>)</span></span> Block&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> newBlock Block</span><br><span class="line">    newBlock.Index = lastBlock.Index + <span class="number">1</span></span><br><span class="line">    newBlock.Timestamp = time.Now().String()</span><br><span class="line">    newBlock.PreHash = lastBlock.Hash</span><br><span class="line">    newBlock.Data = data</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">//通过pos计算由那个村民挖矿</span></span><br><span class="line">    <span class="comment">//设置随机种子</span></span><br><span class="line">    rand.Seed(time.Now().Unix())</span><br><span class="line">    <span class="comment">//[0,15)产生0-15的随机值</span></span><br><span class="line">    <span class="keyword">var</span> rd =rand.Intn(<span class="number">15</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment">//选出挖矿的矿工</span></span><br><span class="line">    node := addr[rd]</span><br><span class="line">    <span class="comment">//设置当前区块挖矿地址为矿工</span></span><br><span class="line">    newBlock.Validator = node</span><br><span class="line">    <span class="comment">//简单模拟 挖矿所得奖励</span></span><br><span class="line">    node.Tokens += <span class="number">1</span></span><br><span class="line">    newBlock.Hash = hex.EncodeToString(BlockHash(&amp;newBlock))</span><br><span class="line">    <span class="keyword">return</span> newBlock</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span>  &#123;</span><br><span class="line"></span><br><span class="line">    InitNodes()</span><br><span class="line"></span><br><span class="line">    <span class="comment">//创建创世区块</span></span><br><span class="line">    <span class="keyword">var</span> genesisBlock = genesisBlock()</span><br><span class="line"></span><br><span class="line">    <span class="comment">//创建新区快</span></span><br><span class="line">    <span class="keyword">var</span> newBlock = CreateNewBlock(&amp;genesisBlock, <span class="string">&quot;new block&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment">//打印新区快信息</span></span><br><span class="line">    fmt.Println(newBlock)</span><br><span class="line">    fmt.Println(newBlock.Validator.Address)</span><br><span class="line">    fmt.Println(newBlock.Validator.Tokens)</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="2-3-DPOS"><a href="#2-3-DPOS" class="headerlink" title="2.3 DPOS"></a>2.3 DPOS</h3><p>委任权益证明（DPOS，Delegated Proof-of-Stake）系统中，权益持有者可以选举领导者（或称为见证人，Witness）。经权益持有者授权，这些领导者可进行投票。该机制使得DPoS要快于正常的PoS。 例如，EOS 中选举出 21 位见证人，并且有一堆节点（潜在的见证人）作为候选者。一旦见证人节点死亡或是做出了恶意行为，新节点就会立刻替代见证人节点。见证人会因为生成区块而获得一笔支付费用。该费用是由权益持有者设立的 。 通常，所有节点采用轮询方式，一次生成一个区块。该机制防止一个节点发布连续的块，进而执行“双重支付”攻击。如果一个见证人在分配给他的时间槽中未生成区块，那么该时间槽就被跳过，并由下一位见证人生成下一个区块。如果见证人持续丢失他的区块，或是发布了错误的交易，那么权益持有者将投票决定其退出，用更好的见证人替换他。 在DPoS中，矿工可以合作生成块，而不是像在PoW和PoS中那样竞争生成。通过区块生成的部分中心化，DPoS的运行可以比其它共识算法呈数量级快。从某种角度来看，DPOS有点像是议会制度或人民代表大会制度。如果代表不能履行他们的职责（当轮到他们时，没能生成区块），他们会被除名，网络会选出新的超级节点来取代他们。</p>
+<p>DPOS略为中心化、拥有高权益的参与者可投票使自己成为一名验证者，这是已在EOS中出现的问题。DPOS是Bitshares的支柱，它通过减少参与共识过程的节点数量，提高了交易处理的效率。这种机制还有助于降低网络的拥堵，提高整体性能。DPOS通过委托权益持有者投票给代表，使得网络治理更加民主化，同时也确保了网络的安全性和去中心化。实例有BitShares、Steemit、EOS、Lisk、Ark等。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    <span class="string">&quot;fmt&quot;</span></span><br><span class="line">    <span class="string">&quot;math/rand&quot;</span></span><br><span class="line">    <span class="string">&quot;time&quot;</span></span><br><span class="line">    <span class="string">&quot;strconv&quot;</span></span><br><span class="line">    <span class="string">&quot;crypto/sha256&quot;</span></span><br><span class="line">    <span class="string">&quot;encoding/hex&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Block <span class="keyword">struct</span> &#123;</span><br><span class="line">    Index <span class="type">int</span></span><br><span class="line">    Timestamp <span class="type">string</span></span><br><span class="line">    Prehash <span class="type">string</span></span><br><span class="line">    Hash <span class="type">string</span></span><br><span class="line">    Data []<span class="type">byte</span></span><br><span class="line"></span><br><span class="line">    delegate *Node<span class="comment">// 代理 区块由哪个节点挖出</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">GenesisBlock</span><span class="params">()</span></span>  Block &#123;</span><br><span class="line">    gene := Block&#123;<span class="number">0</span>, time.Now().String(),<span class="string">&quot;&quot;</span>, <span class="string">&quot;&quot;</span>, []<span class="type">byte</span>(<span class="string">&quot;genesis block&quot;</span>), <span class="literal">nil</span>&#125;</span><br><span class="line"></span><br><span class="line">    gene.Hash = <span class="type">string</span>(blockHash(gene))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> delegate *Node = <span class="built_in">new</span>(Node)</span><br><span class="line">    delegate.Name = <span class="string">&quot;Genis Block&quot;</span></span><br><span class="line">    delegate.Votes = <span class="number">0</span>;</span><br><span class="line">    gene.delegate = delegate</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> gene</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">blockHash</span><span class="params">(block Block)</span></span> []<span class="type">byte</span>  &#123;</span><br><span class="line"></span><br><span class="line">    record := strconv.Itoa(block.Index) + block.Timestamp + block.Prehash + hex.EncodeToString(block.Data)</span><br><span class="line"></span><br><span class="line">    h := sha256.New()</span><br><span class="line">    h.Write([]<span class="type">byte</span>(record))</span><br><span class="line">    hashed := h.Sum(<span class="literal">nil</span>)</span><br><span class="line">    <span class="keyword">return</span> hashed</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//节点类型</span></span><br><span class="line"><span class="keyword">type</span> Node <span class="keyword">struct</span> &#123;</span><br><span class="line">    Name  <span class="type">string</span> <span class="comment">//节点名称</span></span><br><span class="line">    Votes <span class="type">int</span>    <span class="comment">// 被选举的票数</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(node *Node)</span></span>GenerateNewBlock(lastBlock Block, data []<span class="type">byte</span>) Block  &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> newBlock = Block&#123;lastBlock.Index+<span class="number">1</span>, time.Now().String(), lastBlock.Hash, <span class="string">&quot;&quot;</span>, data, <span class="literal">nil</span>&#125;</span><br><span class="line"></span><br><span class="line">    newBlock.Hash = hex.EncodeToString(blockHash(newBlock))</span><br><span class="line">    newBlock.delegate = node</span><br><span class="line">    <span class="keyword">return</span> newBlock</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//创建节点</span></span><br><span class="line"><span class="keyword">var</span> NodeArr = <span class="built_in">make</span>([]Node,<span class="number">10</span>)</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">CreateNode</span><span class="params">()</span></span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="number">10</span>; i++ &#123;</span><br><span class="line">        name := fmt.Sprintf(<span class="string">&quot;NODE %d num&quot;</span>, i+<span class="number">1</span>)</span><br><span class="line">        NodeArr[i] = Node&#123;name, <span class="number">0</span>&#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//简单模拟投票</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Vote</span><span class="params">()</span></span>  &#123;</span><br><span class="line">    <span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="number">10</span>; i++ &#123;</span><br><span class="line">        rand.Seed(time.Now().UnixNano())</span><br><span class="line">        vote := rand.Intn(<span class="number">10</span>) + <span class="number">1</span></span><br><span class="line">        NodeArr[i].Votes = vote</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//选出票数最多的前3位</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">SortNodes</span><span class="params">()</span></span> []Node  &#123;</span><br><span class="line">    n:= NodeArr</span><br><span class="line">    <span class="keyword">for</span> i := <span class="number">0</span>; i&lt;<span class="built_in">len</span>(n) ;i++  &#123;</span><br><span class="line">        <span class="keyword">for</span> j := <span class="number">0</span>; j &lt; <span class="built_in">len</span>(n)<span class="number">-1</span> ;j++  &#123;</span><br><span class="line">            <span class="keyword">if</span> n[j].Votes &lt; n[j+<span class="number">1</span>].Votes &#123;</span><br><span class="line">                n[j],n[j+<span class="number">1</span>] = n[j+<span class="number">1</span>],n[j]</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> n[:<span class="number">3</span>]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line"></span><br><span class="line">    CreateNode()</span><br><span class="line">    fmt.Println(NodeArr)</span><br><span class="line">    Vote()</span><br><span class="line">    nodes := SortNodes()</span><br><span class="line"></span><br><span class="line">    fmt.Println(nodes)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">//创建创世区块</span></span><br><span class="line">    gene := GenesisBlock()</span><br><span class="line"></span><br><span class="line">    lastBlock := gene</span><br><span class="line">    <span class="keyword">for</span> i:= <span class="number">0</span>; i&lt; <span class="built_in">len</span>(nodes) ;i++  &#123;</span><br><span class="line">        <span class="comment">//打印新区块信息</span></span><br><span class="line">        <span class="comment">// var node *Node</span></span><br><span class="line">         node := lastBlock.delegate</span><br><span class="line">         fmt.Println(<span class="string">&quot;区块号:&quot;</span>,lastBlock.Index,<span class="string">&quot;节点名称:&quot;</span>,node.Name,<span class="string">&quot;节点投票数:&quot;</span>,node.Votes)</span><br><span class="line"></span><br><span class="line">        lastBlock =  nodes[i].GenerateNewBlock(lastBlock,[]<span class="type">byte</span>(fmt.Sprintf(<span class="string">&quot;new block %d&quot;</span>,i)))</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="2-4-PBFT"><a href="#2-4-PBFT" class="headerlink" title="2.4 PBFT"></a>2.4 PBFT</h3><p>实用拜占庭容错（PBFT，Practical Byzantine Fault Tolerance）是一种复制算法，用于容忍拜占庭错误。PBFT能够处理高达1/3恶意拜占庭副本的情况。其中一个新区块的确定是在一轮中完成的。在每一轮中，会根据某些规则选择一个主节点。主节点负责对交易进行排序。整个过程可以划分为三个阶段：预准备（pre-prepare）、准备（prepare）和提交（commit）。在每个阶段，如果一个节点收到了超过2/3的节点的投票，它就会进入下一个阶段。因此，PBFT要求网络中的每个节点都是已知的。与PBFT类似，Stellar共识协议（SCP）也是一种拜占庭协议。在PBFT中，每个节点必须查询其他节点，而SCP则给予参与者选择相信哪些其他参与者的权利。基于PBFT，Antshares实现了他们的dBFT（委托拜占庭容错）。在dBFT中，一些专业节点被投票选出以记录交易。PBFT通过确保即使在部分节点存在恶意行为的情况下，系统也能达成一致性，从而在分布式系统中实现了拜占庭容错。它通过多个阶段的投票和确认过程来确保交易的有效性和顺序。SCP则是另一种方法，它通过允许参与者选择信任的节点集合来达成共识，增加了系统的灵活性。dBFT则是PBFT的一个变体，它通过委托给专业节点来记录交易，旨在提高效率和可扩展性。这些共识算法都旨在解决分布式系统中的信任问题，并确保网络的稳定运行。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/loadingPostImg.gif" data-original="webp.webp" alt="img"></p>
+<ul>
+<li><strong>Request：</strong>请求端C发送请求到任意一节点，这里是0；</li>
+<li><strong>Pre-Prepare：</strong>服务端0收到C的请求后进行广播，扩散至123；</li>
+<li><strong>Prepare：</strong>123,收到后记录并再次广播，1-&gt;023，2-&gt;013，3因为宕机无法广播； </li>
+<li><strong>Commit：</strong>0123节点在Prepare阶段，若收到超过一定数量的相同请求，则进入Commit阶段，广播Commit请求； </li>
+<li><strong>Reply：</strong>0123节点在Commit阶段，若收到超过一定数量的相同请求，则对C进行反馈。</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    <span class="string">&quot;os&quot;</span></span><br><span class="line">    <span class="string">&quot;fmt&quot;</span></span><br><span class="line">    <span class="string">&quot;net/http&quot;</span></span><br><span class="line">    <span class="string">&quot;io&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">//声明节点信息,代表各个小国家</span></span><br><span class="line"><span class="keyword">type</span> nodeInfo <span class="keyword">struct</span> &#123;</span><br><span class="line">    <span class="comment">//标示</span></span><br><span class="line">    id <span class="type">string</span></span><br><span class="line">    <span class="comment">//准备访问的方法</span></span><br><span class="line">    path <span class="type">string</span></span><br><span class="line">    <span class="comment">//服务器做出的相应</span></span><br><span class="line">    writer http.ResponseWriter</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//存放四个国家的地址</span></span><br><span class="line"><span class="keyword">var</span> nodeTable = <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="type">string</span>]<span class="type">string</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">//拜占庭在Fabric中的使用</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//获取执行的参数</span></span><br><span class="line">    userId :=os.Args[<span class="number">1</span>]<span class="comment">//获取执行的第一个参数</span></span><br><span class="line">    fmt.Println(userId)</span><br><span class="line"></span><br><span class="line">    <span class="comment">//./main Apple</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//创建四个国家的地址</span></span><br><span class="line">    nodeTable = <span class="keyword">map</span>[<span class="type">string</span>]<span class="type">string</span> &#123;</span><br><span class="line">        <span class="string">&quot;Apple&quot;</span>:<span class="string">&quot;localhost:1111&quot;</span>,</span><br><span class="line">        <span class="string">&quot;MS&quot;</span>:<span class="string">&quot;localhost:1112&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Google&quot;</span>:<span class="string">&quot;localhost:1113&quot;</span>,</span><br><span class="line">        <span class="string">&quot;IBM&quot;</span>:<span class="string">&quot;localhost:1114&quot;</span>,</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    node:=nodeInfo&#123;userId,nodeTable[userId],<span class="literal">nil</span>&#125;</span><br><span class="line">    fmt.Println(node)</span><br><span class="line"></span><br><span class="line">    <span class="comment">//http协议的回调函数</span></span><br><span class="line">    <span class="comment">//http://localhost:1111/req?warTime=8888</span></span><br><span class="line">    http.HandleFunc(<span class="string">&quot;/req&quot;</span>,node.request)</span><br><span class="line">    http.HandleFunc(<span class="string">&quot;/prePrepare&quot;</span>,node.prePrepare)</span><br><span class="line">    http.HandleFunc(<span class="string">&quot;/prepare&quot;</span>,node.prepare)</span><br><span class="line">    http.HandleFunc(<span class="string">&quot;/commit&quot;</span>,node.commit)</span><br><span class="line"></span><br><span class="line">    <span class="comment">//启动服务器</span></span><br><span class="line">    <span class="keyword">if</span> err:=http.ListenAndServe(node.path,<span class="literal">nil</span>);err!=<span class="literal">nil</span> &#123;</span><br><span class="line">        fmt.Print(err)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//此函数是http访问时候req命令的请求回调函数</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(node *nodeInfo)</span></span>request(writer http.ResponseWriter,request *http.Request)&#123;</span><br><span class="line">    <span class="comment">//设置允许解析参数</span></span><br><span class="line">    request.ParseForm()</span><br><span class="line">    <span class="comment">//如果有参数值，则继续处理</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">len</span>(request.Form[<span class="string">&quot;warTime&quot;</span>])&gt;<span class="number">0</span>)&#123;</span><br><span class="line">        node.writer = writer</span><br><span class="line">        <span class="comment">//激活主节点后，广播给其他节点,通过Ａpple向其他节点做广播</span></span><br><span class="line">        node.broadcast(request.Form[<span class="string">&quot;warTime&quot;</span>][<span class="number">0</span>],<span class="string">&quot;/prePrepare&quot;</span>)</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//由主节点向其他节点做广播</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(node *nodeInfo)</span></span>broadcast(msg <span class="type">string</span> ,path <span class="type">string</span> )&#123;</span><br><span class="line">    <span class="comment">//遍历所有的国家</span></span><br><span class="line">    <span class="keyword">for</span> nodeId,url:=<span class="keyword">range</span> nodeTable &#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> nodeId == node.id &#123;</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//调用Get请求</span></span><br><span class="line">        <span class="comment">//http.Get(&quot;http://localhost:1112/prePrepare?warTime=8888&amp;nodeId=Apple&quot;)</span></span><br><span class="line">        http.Get(<span class="string">&quot;http://&quot;</span>+url+path+<span class="string">&quot;?warTime=&quot;</span>+msg+<span class="string">&quot;&amp;nodeId=&quot;</span>+node.id)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(node *nodeInfo)</span></span>prePrepare(writer http.ResponseWriter,request *http.Request) &#123;</span><br><span class="line">    request.ParseForm()</span><br><span class="line">    <span class="comment">//fmt.Println(&quot;hello world&quot;)</span></span><br><span class="line">    <span class="comment">//在做分发</span></span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">len</span>(request.Form[<span class="string">&quot;warTime&quot;</span>])&gt;<span class="number">0</span>)&#123;</span><br><span class="line">        <span class="comment">//分发给其他三个人</span></span><br><span class="line">        node.broadcast(request.Form[<span class="string">&quot;warTime&quot;</span>][<span class="number">0</span>],<span class="string">&quot;/prepare&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(node *nodeInfo)</span></span>prepare(writer http.ResponseWriter,request *http.Request)&#123;</span><br><span class="line"></span><br><span class="line">    request.ParseForm()</span><br><span class="line">    <span class="comment">//调用验证</span></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(request.Form[<span class="string">&quot;warTime&quot;</span>])&gt;<span class="number">0</span>&#123;</span><br><span class="line">        fmt.Println(request.Form[<span class="string">&quot;warTime&quot;</span>][<span class="number">0</span>])</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(request.Form[<span class="string">&quot;nodeId&quot;</span>])&gt;<span class="number">0</span> &#123;</span><br><span class="line">        fmt.Println(request.Form[<span class="string">&quot;nodeId&quot;</span>][<span class="number">0</span>])</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    node.authentication(request)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> authenticationsuccess = <span class="literal">true</span></span><br><span class="line"><span class="keyword">var</span> authenticationMap = <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="type">string</span>]<span class="type">string</span>)</span><br><span class="line"><span class="comment">//获得除了本节点外的其他节点数据</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(node *nodeInfo)</span></span>authentication(request *http.Request) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//接收参数</span></span><br><span class="line">    request.ParseForm()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> authenticationsuccess!=<span class="literal">false</span>  &#123;</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(request.Form[<span class="string">&quot;nodeId&quot;</span>])&gt;<span class="number">0</span> &#123;</span><br><span class="line">            authenticationMap[request.Form[<span class="string">&quot;nodeId&quot;</span>][<span class="number">0</span>]]=<span class="string">&quot;ok&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(authenticationMap)&gt;<span class="built_in">len</span>(nodeTable)/<span class="number">3</span> &#123;</span><br><span class="line">        <span class="comment">//则拜占庭原理实现,通过commit反馈给浏览器</span></span><br><span class="line">        node.broadcast(request.Form[<span class="string">&quot;warTime&quot;</span>][<span class="number">0</span>],<span class="string">&quot;/commit&quot;</span>)</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(node *nodeInfo)</span></span>commit(writer http.ResponseWriter,request *http.Request)&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//给浏览器反馈相应</span></span><br><span class="line">    io.WriteString(node.writer,<span class="string">&quot;ok&quot;</span>)</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="2-5-Ripple"><a href="#2-5-Ripple" class="headerlink" title="2.5 Ripple"></a>2.5 Ripple</h3><p>Ripple共识算法是一种在较大网络内利用集体信任的子网络的共识机制。在这个网络中，节点被分为两种类型：参与共识过程的服务器节点和仅用于资金转移的客户节点。每个服务器节点都有一个独特的节点列表（Unique Node List, UNL）。UNL对服务器节点来说非常重要。当决定是否将交易放入账本时，服务器节点会查询UNL中的节点，如果收到的协议达到80%，则交易将被打包进账本。对于一个节点来说，只要UNL中故障节点的百分比低于20%，账本就会保持正确。</p>
+<p>Ripple共识算法的核心在于信任的构建和维护。服务器节点通过UNL来确定信任的节点集合，并依赖这些节点来达成共识。这种机制允许网络在保持去中心化的同时，实现快速的交易确认和账本更新。Ripple的这种方法强调了网络中节点间信任关系的重要性，并利用这种信任关系来维护整个网络的一致性和安全性。</p>
+<h3 id="2-6-Tendermint"><a href="#2-6-Tendermint" class="headerlink" title="2.6 Tendermint"></a>2.6 Tendermint</h3><p>Tendermint是一种拜占庭容错共识算法。新区块的确定是在一轮中完成的。在这一轮中，会选出一个提议者（proposer），由其广播一个未确认的区块。Tendermint的共识过程可以被划分为三个步骤：</p>
+<ul>
+<li><p><strong>预投票（Prevote）</strong>：验证者选择是否为提议的区块广播一个预投票（prevote）。</p>
+</li>
+<li><p><strong>预提交（Precommit）</strong>：如果节点收到了提议区块超过2/3的预投票，它会为该区块广播一个预提交（precommit）。如果节点收到了超过2/3的预提交，它将进入提交步骤。</p>
+</li>
+<li><p><strong>提交（Commit）</strong>：节点验证区块，并为该区块广播一个提交（commit）。如果节点收到了2/3的提交，它将接受该区块。</p>
+</li>
+</ul>
+<p>与PBFT（实用拜占庭容错）相比，Tendermint要求节点锁定他们的代币以成为验证者。一旦验证者被发现有不诚实行为，它将受到惩罚。</p>
+<p>Tendermint共识算法通过锁定代币的方式，增加了验证者作弊的成本，从而提高了网络的安全性。验证者在预投票和预提交阶段必须做出决策，并且只有在获得足够多的其他验证者的支持时，才会进入提交阶段。这种机制确保了即使在存在拜占庭节点（即恶意或故障节点）的情况下，网络也能达成一致性，并继续运作。Tendermint因其高效性和安全性，被许多区块链项目采用作为其共识机制。</p>
+<h2 id="3-算法比较"><a href="#3-算法比较" class="headerlink" title="3 算法比较"></a>3 算法比较</h2><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>算法</th>
+<th style="text-align:center">PoW</th>
+<th style="text-align:center">PoS</th>
+<th style="text-align:center">DPOS</th>
+<th style="text-align:center">PBFT</th>
+<th style="text-align:center">Ripple</th>
+<th style="text-align:center">Tendermint</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>节点身份管理</td>
+<td style="text-align:center">open</td>
+<td style="text-align:center">open</td>
+<td style="text-align:center">open</td>
+<td style="text-align:center">permissioned</td>
+<td style="text-align:center">open</td>
+<td style="text-align:center">permissioned</td>
+</tr>
+<tr>
+<td>节能</td>
+<td style="text-align:center">no</td>
+<td style="text-align:center">partial</td>
+<td style="text-align:center">partial</td>
+<td style="text-align:center">yes</td>
+<td style="text-align:center">yes</td>
+<td style="text-align:center">yes</td>
+</tr>
+<tr>
+<td>敌手容忍能力</td>
+<td style="text-align:center">&lt; 25% computing power</td>
+<td style="text-align:center">&lt; 51% stake</td>
+<td style="text-align:center">&lt; 51% validators</td>
+<td style="text-align:center">&lt; 33.3% faulty replicas</td>
+<td style="text-align:center">&lt; 20% faulty nodes in UNL</td>
+<td style="text-align:center">&lt; 33.3% byzantine voting power</td>
+</tr>
+<tr>
+<td>实例</td>
+<td style="text-align:center">Bitcoin</td>
+<td style="text-align:center">Peercoin</td>
+<td style="text-align:center">BitShares</td>
+<td style="text-align:center">Hyperledger Fabric</td>
+<td style="text-align:center">Ripple</td>
+<td style="text-align:center">Tendermint</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>PBFT和Tendermint 是许可协议，节点身份预计为整个网络所知，因此它们可能用于商业模式而不是公共模式。 PoW和PoS都适合公有链。联盟链或私有链可能会偏好PBFT、Tendermint、DPOS和Ripple。</p>
+<h2 id="4-参考文献"><a href="#4-参考文献" class="headerlink" title="4 参考文献"></a>4 参考文献</h2><p>[1]Wang W, Hoang D T, Hu P, 等. A Survey on Consensus Mechanisms and Mining Strategy Management in Blockchain Networks[J]. IEEE Access, 2019, 7: 22328-22370. doi: <a target="_blank" rel="noopener" href="https://doi.org/10.1109/ACCESS.2019.2896108">10.1109/ACCESS.2019.2896108</a>.</p>
+<p>[2]C. Decker, J. Seidel, and R. Wattenhofer, “Bitcoin meets strong consistency,” in Proceedings of the 17th International Conference on Distributed Computing and Networking (ICDCN). Singapore, Singapore: ACM, 2016, p. 13.</p>
+</article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/%E6%A0%87%E7%AD%BE/Notes/">Notes</a></div><div class="post_share"><div class="social-share" data-image="/default_cover%20(49).png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/06/27/JSolution/" title="Leetcode_JavaSolution"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/default_cover%20(60).png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Leetcode_JavaSolution</div></div></a></div><div class="next-post pull-right"><a href="/2023/12/09/ML4/" title="ML作业4"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/default_cover%20(44).png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">ML作业4</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2023/11/21/Computer%20Networking%EF%BC%9AA%20Top-Down%20Approach%208th%20Edition/" title="Computer Networking:A Top-Down Approach 8th Edition"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/default_cover%20(29).png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-21</div><div class="title">Computer Networking:A Top-Down Approach 8th Edition</div></div></a></div><div><a href="/2024/06/27/JSolution/" title="Leetcode_JavaSolution"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/default_cover%20(60).png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-06-27</div><div class="title">Leetcode_JavaSolution</div></div></a></div><div><a href="/2023/11/26/JZ/" title="Matrix theory"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/default_cover%20(43).png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-26</div><div class="title">Matrix theory</div></div></a></div><div><a href="/2025/03/10/JavaNotes/" title="JavaNotes"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/default_cover%20(61).png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-03-10</div><div class="title">JavaNotes</div></div></a></div><div><a href="/2025/03/25/Q/" title="Q"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/default_cover%20(62).png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-03-25</div><div class="title">Q</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8C%BA%E5%9D%97%E9%93%BE%E5%85%B1%E8%AF%86%E7%AE%97%E6%B3%95"><span class="toc-text">区块链共识算法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E6%91%98%E8%A6%81"><span class="toc-text">1 摘要</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%85%B1%E8%AF%86%E7%AE%97%E6%B3%95"><span class="toc-text">2 共识算法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-PoW"><span class="toc-text">2.1 PoW</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-PoS"><span class="toc-text">2.2 PoS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-DPOS"><span class="toc-text">2.3 DPOS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-PBFT"><span class="toc-text">2.4 PBFT</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-5-Ripple"><span class="toc-text">2.5 Ripple</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-6-Tendermint"><span class="toc-text">2.6 Tendermint</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E7%AE%97%E6%B3%95%E6%AF%94%E8%BE%83"><span class="toc-text">3 算法比较</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="toc-text">4 参考文献</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer" style="background-image: url('/default_cover%20(49).png')"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2025 By Seelew</div><div class="footer_custom_text">I wish you to become your own sun, no need to rely on who's light.<p><a target="_blank" href="https://hexo.io/"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Frame-Hexo-blue?style=flat&logo=hexo" title="博客框架为Hexo"></a>&nbsp;<a target="_blank" href="https://butterfly.js.org/"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Theme-Butterfly-6513df?style=flat&logo=bitdefender" title="主题采用butterfly"></a>&nbsp;<a target="_blank" href="https://www.jsdelivr.com/"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/CDN-jsDelivr-orange?style=flat&logo=jsDelivr" title="本站使用JsDelivr为静态资源提供CDN加速"></a> &nbsp;<a target="_blank" href="https://vercel.com/ "><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Hosted-Vervel-brightgreen?style=flat&logo=Vercel" title="本站采用双线部署，默认线路托管于Vercel"></a>&nbsp;<a target="_blank" href="https://vercel.com/ "><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Hosted-Coding-0cedbe?style=flat&logo=Codio" title="本站采用双线部署，联通线路托管于Coding"></a>&nbsp;<a target="_blank" href="https://github.com/"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Source-Github-d021d6?style=flat&logo=GitHub" title="本站项目由Gtihub托管"></a>&nbsp;<a target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Copyright-BY--NC--SA%204.0-d42328?style=flat&logo=Claris" title="本站采用知识共享署名-非商业性使用-相同方式共享4.0国际许可协议进行许可"></a></p></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, '']
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script></div><script async src="/js/title.js"></script><canvas id="universe"></canvas><script defer src="/js/universe.js"></script><canvas id="snow"></canvas><script async src="/js/snow.js"></script><script id="canvas_nest" defer="defer" color="255,255,255" opacity="0.7" zIndex="-1" count="30" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div>
+        <style>
+            [bg-lazy] {
+                background-image: none !important;
+                background-color: #eee !important;
+            }
+        </style>
+        <script>
+            window.imageLazyLoadSetting = {
+                isSPA: false,
+                preloadRatio: 1,
+                processImages: null,
+            };
+        </script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z\d\-\.\+]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(t.test(e.href)||r.test(e.href))&&(e.href=a.dataset.original)})});</script><script>(r=>{r.imageLazyLoadSetting.processImages=t;var a=r.imageLazyLoadSetting.isSPA,o=r.imageLazyLoadSetting.preloadRatio||1,d=i();function i(){var t=Array.prototype.slice.call(document.querySelectorAll("img[data-original]")),e=Array.prototype.slice.call(document.querySelectorAll("[bg-lazy]"));return t.concat(e)}function t(t){(a||t)&&(d=i());for(var e,n=0;n<d.length;n++)0<=(e=(e=d[n]).getBoundingClientRect()).bottom&&0<=e.left&&e.top<=(r.innerHeight*o||document.documentElement.clientHeight*o)&&(()=>{var t,e,a,o,i=d[n];e=function(){d=d.filter(function(t){return i!==t}),r.imageLazyLoadSetting.onImageLoaded&&r.imageLazyLoadSetting.onImageLoaded(i)},(t=i).dataset.loaded||(t.hasAttribute("bg-lazy")?(t.removeAttribute("bg-lazy"),e&&e()):(a=new Image,o=t.getAttribute("data-original"),a.onload=function(){t.src=o,t.removeAttribute("data-original"),t.setAttribute("data-loaded",!0),e&&e()},a.onerror=function(){t.removeAttribute("data-original"),t.setAttribute("data-loaded",!1),t.src=o},t.src!==o&&(a.src=o)))})()}function e(){clearTimeout(t.tId),t.tId=setTimeout(t,500)}t(),document.addEventListener("scroll",e),r.addEventListener("resize",e),r.addEventListener("orientationchange",e)})(this);</script></body></html>

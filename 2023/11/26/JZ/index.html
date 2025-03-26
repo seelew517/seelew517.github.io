@@ -1,0 +1,449 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Matrix theory | Seelew's Blog</title><meta name="author" content="Seelew"><meta name="copyright" content="Seelew"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="1 Matrix theory1.1 SVD奇异值分解(Singular Value Decomposition,SVD)是在机器学习领域广泛应用的算法，它不光可以用于降维算法中的特征分解，还可以用于推荐系统，以及自然语言处理等领域。 1.1.1 定义和特征分解不同，SVD并不要求要分解的矩阵为方阵。矩阵$\mathbf{X}$是一个$m \times n$的矩阵，$\mathbf{X}$的SVD">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Matrix theory">
+<meta property="og:url" content="https://seelew517.github.io/2023/11/26/JZ/index.html">
+<meta property="og:site_name" content="Seelew&#39;s Blog">
+<meta property="og:description" content="1 Matrix theory1.1 SVD奇异值分解(Singular Value Decomposition,SVD)是在机器学习领域广泛应用的算法，它不光可以用于降维算法中的特征分解，还可以用于推荐系统，以及自然语言处理等领域。 1.1.1 定义和特征分解不同，SVD并不要求要分解的矩阵为方阵。矩阵$\mathbf{X}$是一个$m \times n$的矩阵，$\mathbf{X}$的SVD">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://seelew517.github.io/default_cover%20(43).png">
+<meta property="article:published_time" content="2023-11-26T09:32:57.000Z">
+<meta property="article:modified_time" content="2023-11-26T09:32:57.000Z">
+<meta property="article:author" content="Seelew">
+<meta property="article:tag" content="Notes">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://seelew517.github.io/default_cover%20(43).png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://seelew517.github.io/2023/11/26/JZ/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  noticeOutdate: {"limitDay":365,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":230},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Seelew","link":"链接: ","source":"来源: Seelew's Blog","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体中文","cht_to_chs":"你已切换为简体中文","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"top-right"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Matrix theory',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-11-26 17:32:57'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const now = new Date()
+          const hour = now.getHours()
+          const isNight = hour <= 6 || hour >= 18
+          if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+          else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><link rel="stylesheet" href="/preloadavatar.css"><link rel="stylesheet" href="/css/universe.css"><link rel="stylesheet" href="/css/card.css"><link rel="stylesheet" href="/css/doublerowdebug.css"><link rel="stylesheet" href="/css/fengcheanimation.css"><link rel="stylesheet" href="/css/snow.css"><!-- hexo injector head_end start --><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Zfour/Butterfly-double-row-display@1.00/cardlistpost.min.css"/>
+<style>#recent-posts > .recent-post-item >.recent-post-info > .article-meta-wrap > .tags:before {content:"\A";
+  white-space: pre;}#recent-posts > .recent-post-item >.recent-post-info > .article-meta-wrap > .tags > .article-meta__separator{display:none}</style>
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head><body><!--link(rel='stylesheet' href='https://cdn.jsdelivr.net/npm/macy@2.1.0/dist/macy.min.css')--><!--script(src='https://cdn.jsdelivr.net/npm/macy@2.1.0/dist/macy.min.js')--><div id="loading-box" onclick="document.getElementById(&quot;loading-box&quot;).classList.add(&quot;loaded&quot;)"><div class="loading-bg"><img class="loading-img nolazyload" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/97341554"/><div class="loading-image-dot"></div><div id="loading-percentage">0%</div></div></div><script>const loadingPercentage = document.getElementById("loading-percentage");
+//const now = new Date();
+//const currentHour = now.getHours();
+//const isDaytime = currentHour >= 6 && currentHour < 18;
+//loadingPercentage.style.color = isDaytime ? "#000000" : "#FFFFFF";
+loadingPercentage.style.color = "white";
+let loadingPercentageTimer = setInterval(function() {
+  var progressBar = document.querySelector(".pace-progress");
+  if (!progressBar) return
+  var currentValue = progressBar.getAttribute("data-progress-text");
+  if (currentValue !== loadingPercentage.textContent) {
+    loadingPercentage.textContent = currentValue;
+    if (currentValue === "100%") {
+      clearInterval(loadingPercentageTimer);
+    }
+  }
+}, 100);
+const preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+  }
+}
+window.addEventListener('load',()=> { preloader.endLoading() })
+
+if (true) {
+  document.addEventListener('pjax:send', () => { preloader.initLoading() })
+  document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+}</script><script>window.paceOptions = {
+  restartOnPushState: false
+}
+
+document.addEventListener('pjax:send', () => {
+  Pace.restart()
+})
+</script><link rel="stylesheet" href="/css/progress_bar.css"/><script src="https://cdn.jsdelivr.net/npm/pace-js/pace.min.js"></script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">13</div></a><a href="/%E6%A0%87%E7%AD%BE/"><div class="headline">标签</div><div class="length-num">3</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/default_cover%20(43).png')"><nav id="nav"><span id="blog-info"><a href="/" title="Seelew's Blog"><span class="site-name">Seelew's Blog</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Matrix theory</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-11-26T09:32:57.000Z" title="发表于 2023-11-26 17:32:57">2023-11-26</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-11-26T09:32:57.000Z" title="更新于 2023-11-26 17:32:57">2023-11-26</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/blog/">blog</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">3.2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>11分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Matrix theory"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="1-Matrix-theory"><a href="#1-Matrix-theory" class="headerlink" title="1 Matrix theory"></a>1 Matrix theory</h2><h3 id="1-1-SVD"><a href="#1-1-SVD" class="headerlink" title="1.1 SVD"></a>1.1 SVD</h3><p>奇异值分解(Singular Value Decomposition,SVD)是在机器学习领域广泛应用的算法，它不光可以用于降维算法中的特征分解，还可以用于推荐系统，以及自然语言处理等领域。</p>
+<h4 id="1-1-1-定义"><a href="#1-1-1-定义" class="headerlink" title="1.1.1 定义"></a>1.1.1 定义</h4><p>和特征分解不同，SVD并不要求要分解的矩阵为方阵。矩阵$\mathbf{X}$是一个$m \times n$的矩阵，$\mathbf{X}$的SVD为</p>
+<script type="math/tex; mode=display">
+\mathbf{X} = \mathbf{U}\mathbf{\Sigma}\mathbf{V}^T</script><p>$\mathbf{U}$是$m \times m$的酉矩阵（左奇异矩阵），$\mathbf{V}$是$n \times n$的酉矩阵（右奇异矩阵），有$\mathbf{U}^{T}\mathbf{U} = \mathbf{I}$，$\mathbf{V}^{T}\mathbf{V} = \mathbf{I}$。</p>
+<p>$\mathbf{\Sigma}$是$m \times n$的对角矩阵（奇异值矩阵），对角元素是$\mathbf{X}$的奇异值。</p>
+<p>$\mathbf{U}$中的每个特征向量叫做$\mathbf{X}$的左奇异向量。$\mathbf{V}$中的每个特征向量叫做$\mathbf{X}$的右奇异向量。</p>
+<h4 id="1-1-2-信息压缩"><a href="#1-1-2-信息压缩" class="headerlink" title="1.1.2 信息压缩"></a>1.1.2 信息压缩</h4><p>在奇异值矩阵中奇异值按照从大到小排列，而且奇异值的减少特别的快。在很多情况下，前10%甚至1%的奇异值的和就占了全部的奇异值之和的99%以上的比例。</p>
+<p>因此，可以用最大的$k$个的奇异值和对应的左右奇异向量来近似描述矩阵，从而达到信息压缩的目的。</p>
+<script type="math/tex; mode=display">
+\mathbf{X}\approx\mathbf{X}_k=\mathbf{U}_k\mathbf{\Sigma}_k\mathbf{V}_k^T</script><p>可以通过</p>
+<script type="math/tex; mode=display">
+\|\mathbf{X}-\mathbf{X}_k\|_F\leq\sqrt{\sum_{i=k+1}^r\sigma_i^2}</script><p>来保证$\mathbf{X}$和$\mathbf{X}_k$的近似程度。$\| \cdot \|_{F}$是矩阵的$F$范数，$r$是$\mathbf{X}$的秩，$\sigma_i$是$\mathbf{X}$的第$i$个奇异值。</p>
+<p>信息压缩的思想在图像、音频和视频压缩等方向都有应用。</p>
+<h4 id="1-1-3-应用"><a href="#1-1-3-应用" class="headerlink" title="1.1.3 应用"></a>1.1.3 应用</h4><p>PCA降维需要找到样本协方差矩阵$\mathbf{X}^{T}\mathbf{X}$的最大的$d$个特征向量，然后用这最大的$d$个特征向量张成的矩阵来做低维投影降维。可以看出，在这个过程中需要先求出协方差矩阵 $\mathbf{X}^{T}\mathbf{X}$，当样本数和特征数较多时，计算量非常大。而一些SVD的实现算法可以不先求出$\mathbf{X}^{T}\mathbf{X}$也能求出右奇异矩阵$\mathbf{V}$。即可以不做特征分解而是通过SVD来实现PCA。</p>
+<p>左奇异矩阵可以用于行数的压缩，右奇异矩阵可以用于列数即特征维度的压缩，也就是PCA降维。</p>
+<h3 id="1-2-稀疏矩阵"><a href="#1-2-稀疏矩阵" class="headerlink" title="1.2 稀疏矩阵"></a>1.2 稀疏矩阵</h3><p>在深度学习领域矩阵是一种存储数据的常用方式。但在实际应用中矩阵往往较大且非零元素较少，这时如果对矩阵执行操作，会有大部分的内存资源和计算资源浪费在分配32或64位的零值或是将他们相加相乘上。这对于算法的空间复杂度和时间复杂度来说都是非常不利的，而且这种浪费会随着矩阵的增大或稀疏性变小持续增加。</p>
+<h4 id="1-2-1-定义"><a href="#1-2-1-定义" class="headerlink" title="1.2.1 定义"></a>1.2.1 定义</h4><p>稀疏矩阵是绝大多数元素都为0的矩阵。</p>
+<p>维基百科中有如下介绍：</p>
+<blockquote>
+<p><strong>稀疏矩阵(sparse matrix)</strong>，在数值分析中，是其元素大部分为零的矩阵。反之，如果大部分元素都非零，则这个矩阵是<strong>稠密(dense)</strong>的。在科学与工程领域中求解线性模型时经常出现大型的稀疏矩阵。</p>
+<p>在使用计算机存储和操作稀疏矩阵时，经常需要修改标准算法以利用矩阵的稀疏结构。由于其自身的稀疏特性，通过压缩可以大大节省稀疏矩阵的内存代价。更为重要的是，由于过大的尺寸，标准的算法经常无法操作这些稀疏矩阵。</p>
+</blockquote>
+<p>非零元素的总数比上矩阵所有元素的总数为矩阵的稠密度。可以量化矩阵的稀疏性。</p>
+<h4 id="1-2-2-存储"><a href="#1-2-2-存储" class="headerlink" title="1.2.2 存储"></a>1.2.2 存储</h4><p>稀疏矩阵通常具有很高的维度，在存储时大量的零元素占据大部分内存。因此我们希望只存储矩阵中的非零元素值。为了存储非零元素值，需要同时存储坐标位置和元素值，以便恢复。</p>
+<p>对稀疏矩阵的压缩存储就是在构造更为有效的数据结构。常见的有：</p>
+<ul>
+<li><p>支持高效访问、矩阵操作的<a href="#anchor1">CSR</a>、<a href="#anchor2">CSC</a></p>
+</li>
+<li><p>支持高效修改的<a href="#anchor3">DOK</a>、<a href="#anchor4">LIL</a>、<a href="#anchor5">COO</a></p>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> scipy <span class="keyword">import</span> sparse</span><br><span class="line"><span class="built_in">help</span>(sparse)</span><br><span class="line"></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">Sparse Matrix Storage Formats</span></span><br><span class="line"><span class="string">There are seven available sparse matrix types:</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        1. csc_matrix: Compressed Sparse Column format</span></span><br><span class="line"><span class="string">        2. csr_matrix: Compressed Sparse Row format</span></span><br><span class="line"><span class="string">        3. bsr_matrix: Block Sparse Row format</span></span><br><span class="line"><span class="string">        4. lil_matrix: List of Lists format</span></span><br><span class="line"><span class="string">        5. dok_matrix: Dictionary of Keys format</span></span><br><span class="line"><span class="string">        6. coo_matrix: COOrdinate format (aka IJV, triplet format)</span></span><br><span class="line"><span class="string">        7. dia_matrix: DIAgonal format</span></span><br><span class="line"><span class="string">        8. spmatrix: Sparse matrix base clas</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>SciPy库提供了七种可用的稀疏矩阵类型。</p>
+<h5 id="CSR-压缩稀疏行矩阵"><a href="#CSR-压缩稀疏行矩阵" class="headerlink" title=" CSR 压缩稀疏行矩阵"></a><a name="anchor1"></a> CSR 压缩稀疏行矩阵</h5><ul>
+<li><code>indices, indptr, data</code>确定矩阵</li>
+<li>对于第 <code>i</code> 行而言，该行中非零元素的列索引为 <code>indices[indptr[i]:indptr[i+1]]</code></li>
+<li><code>indptr[i] = indptr[i+1]</code>则该行没有非零元素</li>
+<li>数据存放在： <code>data[indptr[i]:indptr[i+1]]</code></li>
+</ul>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/loadingPostImg.gif" data-original="62c92320-23cb-11eb-b89e-32690a56e4fd [MConverter.eu].webp" alt="img"></p>
+<h5 id="CSC-压缩稀疏列矩阵"><a href="#CSC-压缩稀疏列矩阵" class="headerlink" title="CSC 压缩稀疏列矩阵"></a><a name="anchor2"></a>CSC 压缩稀疏列矩阵</h5><ul>
+<li>与CSR类似，但按列压缩矩阵</li>
+</ul>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/loadingPostImg.gif" data-original="17ce6ebc-232f-11eb-8376-cadbb0a08063 [MConverter.eu].webp" alt="img"></p>
+<h5 id="DOK-关键字字典矩阵"><a href="#DOK-关键字字典矩阵" class="headerlink" title="DOK 关键字字典矩阵"></a><a name="anchor3"></a>DOK 关键字字典矩阵</h5><ul>
+<li>字典的 <code>key</code> 存的是记录元素的位置信息的元组， <code>value</code> 是记录元素的具体值</li>
+</ul>
+<h5 id="LIL-链表矩阵"><a href="#LIL-链表矩阵" class="headerlink" title="LIL 链表矩阵"></a><a name="anchor4"></a>LIL 链表矩阵</h5><ul>
+<li><code>data</code>保存每行中的非零元素的值，<code>rows</code>保存每行非零元素所在的列</li>
+</ul>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/loadingPostImg.gif" data-original="c7487c86-2355-11eb-bb7c-368fe856f9f2 [MConverter.eu].webp" alt="img"></p>
+<h5 id="COO-坐标列表矩阵"><a href="#COO-坐标列表矩阵" class="headerlink" title="COO 坐标列表矩阵"></a><a name="anchor5"></a>COO 坐标列表矩阵</h5><ul>
+<li>三元组<code>(row, col, data)</code>形式存储非零元素</li>
+<li><code>coo[row[k]][col[k]] = data[k]</code></li>
+</ul>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/loadingPostImg.gif" data-original="v2-0e24a642bfd95d61e5f0e8ce7b5b167c_b.webp" alt="img"></p>
+<h4 id="1-2-3-应用"><a href="#1-2-3-应用" class="headerlink" title="1.2.3 应用"></a>1.2.3 应用</h4><p>以信道稀疏恢复问题为例。</p>
+<ul>
+<li>在通信系统中，信道稀疏恢复问题是指信号在信道传输过程中，由于时变、多径的影响，导致信号在接收端出现了噪声和失真。信号在传输过程中往往仅占据整体信号空间的一小部分，形成了稀疏性。因此，需要通过恢复算法准确地还原原始信号。</li>
+<li>由于信号的稀疏性，可以将信道传输建模为一个稀疏矩阵。通过稀疏矩阵的方法，可以更准确地估计信道的状态，减小信道估计误差，提高恢复信号的准确性。</li>
+</ul>
+<h5 id="稀疏性利用-sparsity-exploitation-物理层的UWA-Underwater-Acoustic-传感器网络-1"><a href="#稀疏性利用-sparsity-exploitation-物理层的UWA-Underwater-Acoustic-传感器网络-1" class="headerlink" title="稀疏性利用(sparsity exploitation)物理层的UWA(Underwater Acoustic)传感器网络[1]"></a>稀疏性利用(sparsity exploitation)物理层的UWA(Underwater Acoustic)传感器网络<sup><a href="#a6">[1]</a></sup></h5><p>鉴于UWA信道固有的稀疏特性，压缩感知(CS)理论能够将UWA信道估计转化为稀疏恢复问题，从而提高性能。用于稀疏恢复的一种流行的经典CS算法是贪心算法，包括匹配追踪算法(MP)和正交匹配追踪(OMP)算法。然而，大多数CS算法都认为稀疏结构保持静止，即未考虑UWA信道的时变稀疏性。UWA信道的时变性会显著恶化信号矢量与所需原子（测量矩阵的列向量）之间的相关性，导致OMP算法的性能下降。</p>
+<p>论文通过将信道估计问题表述为恢复具有时变支持的稀疏集，采用降阶卡尔曼滤波器(KF)来估计非零系数集，而支持的变化则通过运行CS来获得。</p>
+<h6 id="CS信道估计"><a href="#CS信道估计" class="headerlink" title="CS信道估计"></a>CS信道估计</h6><p>稀疏恢复问题：</p>
+<script type="math/tex; mode=display">
+{\underset{\mathbf{h}}\min \left \| \mathbf{h} \right \| _{1}} \text{ s.t. }\quad\mathbf{y} = \mathbf{A}\mathbf{h}</script><p>$\mathbf{y}$，$\mathbf{h}$和$\mathbf{A}$分别表示接收信号、时变UWA信道和测量矩阵。$\left \| \mathbf{h} \right \| _{1}$指$l_{1}$范式。</p>
+<p>贪心算法广泛应用于解决UWA信道稀疏恢复问题。OMP算法实现简单、计算复杂度低，是一种典型的贪心算法。然而，OMP算法尚未考虑UWA信道的时变稀疏性，不足以产生理想的性能。</p>
+<h6 id="DCS信道估计"><a href="#DCS信道估计" class="headerlink" title="DCS信道估计"></a>DCS信道估计</h6><p>将UWA信道表示为时变稀疏集，在DCS(Dynamic CS)框架下解决信道估计问题。</p>
+<p>对于具有不同支持度的稀疏信号序列，KF-CS有如下重构思想。测量模型为</p>
+<script type="math/tex; mode=display">
+\mathbf{y}_{t} =\mathbf{A}\mathbf{h}_{t} +  \mathbf{w}_{t},\mathbf{w}_{t}\sim CN\left ( 0,\sigma ^{2}_{obs} \mathbf{I}  \right )</script><p>$\mathbf{y}_{t}$，$\mathbf{h}_{t}$和$\mathbf{w}_{t}$是时刻$t$的接收信号、时变UWA信道和加性噪声。$\mathbf{A}\in C^{M\times N}$是测量矩阵，$M$和$N$分别是接收信号$\mathbf{y}_{t}$和脉冲响应$\mathbf{h}_{t}$的长度。$\sigma ^{2}_{obs}$是观测噪声的方差。$CN\left ( 0,\sigma ^{2}_{obs} \mathbf{I}  \right )$表示均值为$0$协方差矩阵为$\sigma ^{2}_{obs} \mathbf{I}$的复高斯向量。</p>
+<p>KF-CS算法：</p>
+<p>1）运行临时KF</p>
+<script type="math/tex; mode=display">
+\begin{align} \mathbf{K}_{t,tmp} &= ( \mathbf{P}_{t−1} + \hat{\mathbf{Q}}_{t} ) \mathbf{A}^{\prime}( \mathbf{A} ( \mathbf{P}_{t} + \hat{\mathbf{Q}}_{t} ) \mathbf{A}^{\prime} + \sigma ^{2}_{obs}\mathbf{I} )^{-1}\\ 
+\hat{\mathbf{h}}_{t,tmp} &= (\mathbf{I} − \mathbf{K}_{t,tmp}\mathbf{A}) \hat{\mathbf{h}}_{t-1} + \mathbf{K}_{t,tmp}\mathbf{y}_{t}.\end{align}</script><p>2）通过 CS 检测和估计增量，滤波误差为</p>
+<script type="math/tex; mode=display">
+\tilde{\mathbf{y}}_{t,res} = \mathbf{y}_{t} − \mathbf{A} \hat{\mathbf{h}}_{t,tmp}</script><p>3）更新KF</p>
+<script type="math/tex; mode=display">
+\begin{align} 
+\mathbf{P}_{t \mid t-1} &= \left ( \mathbf{P}_{t-1} + \hat{\mathbf{Q}}_{t} \right ) \\
+\mathbf{K}_{t} &= \mathbf{P}_{t \mid t-1}A^{\prime}\left ( \mathbf{A}\mathbf{P}_{t \mid t-1}\mathbf{A}^{\prime} + \sigma ^{2}_{obs}\mathbf{I} \right )^{-1} \\
+\mathbf{P}_{t} &= \left ( \mathbf{I} - \mathbf{K}_{t}\mathbf{A} \right )\mathbf{P}_{t \mid t-1} \\
+\hat{\mathbf{h}}_{t} &=  \left ( \mathbf{I} - \mathbf{K}_{t}\mathbf{A} \right )\hat{\mathbf{h}}_{t-1} + \mathbf{K}_{t}y_{t}
+\end{align}</script><p>经过仿真，DCS信道估计驱动物理层的UWA传感器网络能获得更低的网络误码率输出、更高的网络吞吐量和更小的端到端延迟值。从网络性能上验证了经典稀疏性利用和动态稀疏性利用在提高UWA传感器网络性能方面的有效性。在时变信道条件下，物理层接收器对网络性能的影响在网络提供负载极高或极低时都很小。换句话说，在适当的网络负载范围内，具有动态稀疏性利用功能的接收器有助于改善存在时变信道时的网络性能。</p>
+<h2 id="2-映射"><a href="#2-映射" class="headerlink" title="2 映射"></a>2 映射</h2><h3 id="2-1-定义"><a href="#2-1-定义" class="headerlink" title="2.1 定义"></a>2.1 定义</h3><p>设$S$、$S^{\prime}$是给定的两个<strong>非空集合</strong>，如果有一个对应法则$\sigma$，通过这个法则对于中的<strong>每一个元素</strong>$a$，都有$S^{‘}$中一个<strong>唯一确定的元素</strong>$a^{\prime}$与它对应，则称$\sigma$为$S$到$S^{\prime}$的一个映射，记作：$\sigma : S\to S^{\prime} $或$ S\overset{\sigma}\longrightarrow S^{\prime}$。称$a^{\prime}$为$a$在映射$\sigma$下的象，而$a^{\prime}$称为$a$在映射$\sigma$下的原象。</p>
+<h3 id="2-2-为什么这样定义映射"><a href="#2-2-为什么这样定义映射" class="headerlink" title="2.2 为什么这样定义映射"></a>2.2 为什么这样定义映射</h3><p>映射是多对一的，意味着不同的元素可以映射到相同的元素，但在一个给定的映射中，对于每个原象，其映射到的象是唯一确定的。</p>
+<p>映射的定义是为了描述和研究集合之间对应关系而引入的概念，是一种数学抽象，可以用来分析很多实际问题。</p>
+<ul>
+<li>映射可以表示函数关系：导数、积分、编程语言函数等</li>
+<li>映射可以表示数据结构：数组、链表、哈希表等</li>
+<li>映射可以表示变换关系：线性变换等</li>
+</ul>
+<p>映射的定义还可以进一步扩展。如集值映射、多值映射等。</p>
+<ul>
+<li>集值映射指映射的值域是一个集合而不仅仅是一个单一的元素。可以用来描述不确定性或多义性情况下，输入对应多个可能输出，输出形成一个集合的情况。</li>
+<li>多值映射允许输入在值域中有多个对应的元素，即放宽唯一性的要求。与集值映射相似，多值映射也可以用来描述处理多义性多值性的问题。多值函数是多值映射的一种。<ul>
+<li>多值函数可以描述系统的多分支性质。</li>
+<li>复数域函数的多值性更为显著。在复分析时会经常遇到函数对于非零复数有多个值的情况。</li>
+<li>信号处理中一些传输函数可能有多输入多输出。</li>
+<li>通信网中使用图论方法分析时，在多重边情况下，节点之间的关系可以通过多值函数表示。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<p>参考资料：</p>
+<p><a name="a6"></a>[1]WEIHUA JIANG, FENG TONG. Exploiting Sparsity for Underwater Acoustic Sensor Network Under Time-Varying Channels[J/OL]. IEEE Internet of Things Journal, 2022, 9(4): 2859-2869. DOI:<a target="_blank" rel="noopener" href="https://doi.org/10.1109/JIOT.2021.3094818">10.1109/JIOT.2021.3094818</a>.</p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/29846048">奇异值分解（SVD） - 知乎 (zhihu.com)</a></p>
+<p><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/稀疏矩阵">稀疏矩阵 - 维基百科，自由的百科全书 (wikipedia.org)</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/188700729">Sparse稀疏矩阵主要存储格式总结 - 知乎 (zhihu.com)</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/no_007/article/details/32428167">什么是映射？为什么需要映射_服务器上为什么会产生映射-CSDN博客</a></p>
+</article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/%E6%A0%87%E7%AD%BE/Notes/">Notes</a></div><div class="post_share"><div class="social-share" data-image="/default_cover%20(43).png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/11/28/ML3/" title="ML作业3"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/default_cover%20(48).png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">ML作业3</div></div></a></div><div class="next-post pull-right"><a href="/2023/11/21/Computer%20Networking%EF%BC%9AA%20Top-Down%20Approach%208th%20Edition/" title="Computer Networking:A Top-Down Approach 8th Edition"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/default_cover%20(29).png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Computer Networking:A Top-Down Approach 8th Edition</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2023/11/21/Computer%20Networking%EF%BC%9AA%20Top-Down%20Approach%208th%20Edition/" title="Computer Networking:A Top-Down Approach 8th Edition"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/default_cover%20(29).png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-21</div><div class="title">Computer Networking:A Top-Down Approach 8th Edition</div></div></a></div><div><a href="/2024/06/27/JSolution/" title="Leetcode_JavaSolution"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/default_cover%20(60).png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-06-27</div><div class="title">Leetcode_JavaSolution</div></div></a></div><div><a href="/2025/03/10/JavaNotes/" title="JavaNotes"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/default_cover%20(61).png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-03-10</div><div class="title">JavaNotes</div></div></a></div><div><a href="/2025/03/25/Q/" title="Q"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/default_cover%20(62).png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-03-25</div><div class="title">Q</div></div></a></div><div><a href="/2024/06/05/bl/" title="Blockchain Consensus Algorithms"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/default_cover%20(49).png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-06-05</div><div class="title">Blockchain Consensus Algorithms</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Matrix-theory"><span class="toc-text">1 Matrix theory</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-SVD"><span class="toc-text">1.1 SVD</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-1-1-%E5%AE%9A%E4%B9%89"><span class="toc-text">1.1.1 定义</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-1-2-%E4%BF%A1%E6%81%AF%E5%8E%8B%E7%BC%A9"><span class="toc-text">1.1.2 信息压缩</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-1-3-%E5%BA%94%E7%94%A8"><span class="toc-text">1.1.3 应用</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E7%A8%80%E7%96%8F%E7%9F%A9%E9%98%B5"><span class="toc-text">1.2 稀疏矩阵</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-2-1-%E5%AE%9A%E4%B9%89"><span class="toc-text">1.2.1 定义</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-2-2-%E5%AD%98%E5%82%A8"><span class="toc-text">1.2.2 存储</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#CSR-%E5%8E%8B%E7%BC%A9%E7%A8%80%E7%96%8F%E8%A1%8C%E7%9F%A9%E9%98%B5"><span class="toc-text"> CSR 压缩稀疏行矩阵</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#CSC-%E5%8E%8B%E7%BC%A9%E7%A8%80%E7%96%8F%E5%88%97%E7%9F%A9%E9%98%B5"><span class="toc-text">CSC 压缩稀疏列矩阵</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#DOK-%E5%85%B3%E9%94%AE%E5%AD%97%E5%AD%97%E5%85%B8%E7%9F%A9%E9%98%B5"><span class="toc-text">DOK 关键字字典矩阵</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#LIL-%E9%93%BE%E8%A1%A8%E7%9F%A9%E9%98%B5"><span class="toc-text">LIL 链表矩阵</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#COO-%E5%9D%90%E6%A0%87%E5%88%97%E8%A1%A8%E7%9F%A9%E9%98%B5"><span class="toc-text">COO 坐标列表矩阵</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-2-3-%E5%BA%94%E7%94%A8"><span class="toc-text">1.2.3 应用</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%A8%80%E7%96%8F%E6%80%A7%E5%88%A9%E7%94%A8-sparsity-exploitation-%E7%89%A9%E7%90%86%E5%B1%82%E7%9A%84UWA-Underwater-Acoustic-%E4%BC%A0%E6%84%9F%E5%99%A8%E7%BD%91%E7%BB%9C-1"><span class="toc-text">稀疏性利用(sparsity exploitation)物理层的UWA(Underwater Acoustic)传感器网络[1]</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#CS%E4%BF%A1%E9%81%93%E4%BC%B0%E8%AE%A1"><span class="toc-text">CS信道估计</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#DCS%E4%BF%A1%E9%81%93%E4%BC%B0%E8%AE%A1"><span class="toc-text">DCS信道估计</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E6%98%A0%E5%B0%84"><span class="toc-text">2 映射</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E5%AE%9A%E4%B9%89"><span class="toc-text">2.1 定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%99%E6%A0%B7%E5%AE%9A%E4%B9%89%E6%98%A0%E5%B0%84"><span class="toc-text">2.2 为什么这样定义映射</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer" style="background-image: url('/default_cover%20(43).png')"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2025 By Seelew</div><div class="footer_custom_text">I wish you to become your own sun, no need to rely on who's light.<p><a target="_blank" href="https://hexo.io/"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Frame-Hexo-blue?style=flat&logo=hexo" title="博客框架为Hexo"></a>&nbsp;<a target="_blank" href="https://butterfly.js.org/"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Theme-Butterfly-6513df?style=flat&logo=bitdefender" title="主题采用butterfly"></a>&nbsp;<a target="_blank" href="https://www.jsdelivr.com/"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/CDN-jsDelivr-orange?style=flat&logo=jsDelivr" title="本站使用JsDelivr为静态资源提供CDN加速"></a> &nbsp;<a target="_blank" href="https://vercel.com/ "><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Hosted-Vervel-brightgreen?style=flat&logo=Vercel" title="本站采用双线部署，默认线路托管于Vercel"></a>&nbsp;<a target="_blank" href="https://vercel.com/ "><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Hosted-Coding-0cedbe?style=flat&logo=Codio" title="本站采用双线部署，联通线路托管于Coding"></a>&nbsp;<a target="_blank" href="https://github.com/"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Source-Github-d021d6?style=flat&logo=GitHub" title="本站项目由Gtihub托管"></a>&nbsp;<a target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Copyright-BY--NC--SA%204.0-d42328?style=flat&logo=Claris" title="本站采用知识共享署名-非商业性使用-相同方式共享4.0国际许可协议进行许可"></a></p></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, '']
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script></div><script async src="/js/title.js"></script><canvas id="universe"></canvas><script defer src="/js/universe.js"></script><canvas id="snow"></canvas><script async src="/js/snow.js"></script><script id="canvas_nest" defer="defer" color="255,255,255" opacity="0.7" zIndex="-1" count="30" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div>
+        <style>
+            [bg-lazy] {
+                background-image: none !important;
+                background-color: #eee !important;
+            }
+        </style>
+        <script>
+            window.imageLazyLoadSetting = {
+                isSPA: false,
+                preloadRatio: 1,
+                processImages: null,
+            };
+        </script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z\d\-\.\+]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(t.test(e.href)||r.test(e.href))&&(e.href=a.dataset.original)})});</script><script>(r=>{r.imageLazyLoadSetting.processImages=t;var a=r.imageLazyLoadSetting.isSPA,o=r.imageLazyLoadSetting.preloadRatio||1,d=i();function i(){var t=Array.prototype.slice.call(document.querySelectorAll("img[data-original]")),e=Array.prototype.slice.call(document.querySelectorAll("[bg-lazy]"));return t.concat(e)}function t(t){(a||t)&&(d=i());for(var e,n=0;n<d.length;n++)0<=(e=(e=d[n]).getBoundingClientRect()).bottom&&0<=e.left&&e.top<=(r.innerHeight*o||document.documentElement.clientHeight*o)&&(()=>{var t,e,a,o,i=d[n];e=function(){d=d.filter(function(t){return i!==t}),r.imageLazyLoadSetting.onImageLoaded&&r.imageLazyLoadSetting.onImageLoaded(i)},(t=i).dataset.loaded||(t.hasAttribute("bg-lazy")?(t.removeAttribute("bg-lazy"),e&&e()):(a=new Image,o=t.getAttribute("data-original"),a.onload=function(){t.src=o,t.removeAttribute("data-original"),t.setAttribute("data-loaded",!0),e&&e()},a.onerror=function(){t.removeAttribute("data-original"),t.setAttribute("data-loaded",!1),t.src=o},t.src!==o&&(a.src=o)))})()}function e(){clearTimeout(t.tId),t.tId=setTimeout(t,500)}t(),document.addEventListener("scroll",e),r.addEventListener("resize",e),r.addEventListener("orientationchange",e)})(this);</script></body></html>

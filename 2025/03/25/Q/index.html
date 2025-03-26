@@ -1,0 +1,522 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Q | Seelew's Blog</title><meta name="author" content="Seelew"><meta name="copyright" content="Seelew"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="过滤器和拦截器的区别是啥？执行顺序是啥？以及实现原理的区别？概念层面  过滤器（Filter）：是 Servlet 规范中的一部分，用于对请求和响应进行预处理和后处理。它可以在请求到达 Servlet 之前或响应返回客户端之前对请求和响应进行修改，常用于字符编码转换、日志记录、权限验证等功能。 拦截器（Interceptor）：是 Spring 框架提供的功能，用于对 Controller 方法进">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Q">
+<meta property="og:url" content="https://seelew517.github.io/2025/03/25/Q/index.html">
+<meta property="og:site_name" content="Seelew&#39;s Blog">
+<meta property="og:description" content="过滤器和拦截器的区别是啥？执行顺序是啥？以及实现原理的区别？概念层面  过滤器（Filter）：是 Servlet 规范中的一部分，用于对请求和响应进行预处理和后处理。它可以在请求到达 Servlet 之前或响应返回客户端之前对请求和响应进行修改，常用于字符编码转换、日志记录、权限验证等功能。 拦截器（Interceptor）：是 Spring 框架提供的功能，用于对 Controller 方法进">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://seelew517.github.io/default_cover%20(62).png">
+<meta property="article:published_time" content="2025-03-25T13:44:09.000Z">
+<meta property="article:modified_time" content="2025-03-26T08:50:30.750Z">
+<meta property="article:author" content="Seelew">
+<meta property="article:tag" content="Notes">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://seelew517.github.io/default_cover%20(62).png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://seelew517.github.io/2025/03/25/Q/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  noticeOutdate: {"limitDay":365,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":230},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Seelew","link":"链接: ","source":"来源: Seelew's Blog","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体中文","cht_to_chs":"你已切换为简体中文","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"top-right"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Q',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-03-26 16:50:30'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const now = new Date()
+          const hour = now.getHours()
+          const isNight = hour <= 6 || hour >= 18
+          if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+          else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><link rel="stylesheet" href="/preloadavatar.css"><link rel="stylesheet" href="/css/universe.css"><link rel="stylesheet" href="/css/card.css"><link rel="stylesheet" href="/css/doublerowdebug.css"><link rel="stylesheet" href="/css/fengcheanimation.css"><link rel="stylesheet" href="/css/snow.css"><!-- hexo injector head_end start --><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Zfour/Butterfly-double-row-display@1.00/cardlistpost.min.css"/>
+<style>#recent-posts > .recent-post-item >.recent-post-info > .article-meta-wrap > .tags:before {content:"\A";
+  white-space: pre;}#recent-posts > .recent-post-item >.recent-post-info > .article-meta-wrap > .tags > .article-meta__separator{display:none}</style>
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head><body><!--link(rel='stylesheet' href='https://cdn.jsdelivr.net/npm/macy@2.1.0/dist/macy.min.css')--><!--script(src='https://cdn.jsdelivr.net/npm/macy@2.1.0/dist/macy.min.js')--><div id="loading-box" onclick="document.getElementById(&quot;loading-box&quot;).classList.add(&quot;loaded&quot;)"><div class="loading-bg"><img class="loading-img nolazyload" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/97341554"/><div class="loading-image-dot"></div><div id="loading-percentage">0%</div></div></div><script>const loadingPercentage = document.getElementById("loading-percentage");
+//const now = new Date();
+//const currentHour = now.getHours();
+//const isDaytime = currentHour >= 6 && currentHour < 18;
+//loadingPercentage.style.color = isDaytime ? "#000000" : "#FFFFFF";
+loadingPercentage.style.color = "white";
+let loadingPercentageTimer = setInterval(function() {
+  var progressBar = document.querySelector(".pace-progress");
+  if (!progressBar) return
+  var currentValue = progressBar.getAttribute("data-progress-text");
+  if (currentValue !== loadingPercentage.textContent) {
+    loadingPercentage.textContent = currentValue;
+    if (currentValue === "100%") {
+      clearInterval(loadingPercentageTimer);
+    }
+  }
+}, 100);
+const preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+  }
+}
+window.addEventListener('load',()=> { preloader.endLoading() })
+
+if (true) {
+  document.addEventListener('pjax:send', () => { preloader.initLoading() })
+  document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+}</script><script>window.paceOptions = {
+  restartOnPushState: false
+}
+
+document.addEventListener('pjax:send', () => {
+  Pace.restart()
+})
+</script><link rel="stylesheet" href="/css/progress_bar.css"/><script src="https://cdn.jsdelivr.net/npm/pace-js/pace.min.js"></script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">13</div></a><a href="/%E6%A0%87%E7%AD%BE/"><div class="headline">标签</div><div class="length-num">3</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/default_cover%20(62).png')"><nav id="nav"><span id="blog-info"><a href="/" title="Seelew's Blog"><span class="site-name">Seelew's Blog</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Q</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-03-25T13:44:09.000Z" title="发表于 2025-03-25 21:44:09">2025-03-25</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-03-26T08:50:30.750Z" title="更新于 2025-03-26 16:50:30">2025-03-26</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/blog/">blog</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>12分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Q"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h5 id="过滤器和拦截器的区别是啥？执行顺序是啥？以及实现原理的区别？"><a href="#过滤器和拦截器的区别是啥？执行顺序是啥？以及实现原理的区别？" class="headerlink" title="过滤器和拦截器的区别是啥？执行顺序是啥？以及实现原理的区别？"></a>过滤器和拦截器的区别是啥？执行顺序是啥？以及实现原理的区别？</h5><p>概念层面</p>
+<ul>
+<li><strong>过滤器（Filter）</strong>：是 Servlet 规范中的一部分，用于对请求和响应进行预处理和后处理。它可以在请求到达 Servlet 之前或响应返回客户端之前对请求和响应进行修改，常用于字符编码转换、日志记录、权限验证等功能。</li>
+<li><strong>拦截器（Interceptor）</strong>：是 Spring 框架提供的功能，用于对 Controller 方法进行拦截。它可以在 Controller 方法执行前后进行额外的处理，常用于权限检查、日志记录、性能监控等。</li>
+</ul>
+<p>应用范围</p>
+<ul>
+<li><strong>过滤器</strong>：基于 Servlet 容器，适用于所有的 Web 请求，无论是 Servlet、JSP 还是其他基于 Servlet 的框架。</li>
+<li><strong>拦截器</strong>：基于 Spring 框架，只能用于 Spring MVC 的请求处理流程中，只有在 Spring MVC 的 DispatcherServlet 接收到请求后才会起作用。</li>
+</ul>
+<p>功能粒度</p>
+<ul>
+<li><strong>过滤器</strong>：主要针对请求和响应进行全局的处理，无法获取 Spring 容器中的 Bean，对请求的处理相对较为底层，通常用于对请求和响应的基本操作，如字符编码设置、请求参数过滤等。</li>
+<li><strong>拦截器</strong>：可以获取 Spring 容器中的 Bean，能够对 Controller 方法进行更细粒度的控制，可以在方法执行前后进行拦截，并且可以获取方法的参数、返回值等信息，适合实现一些与业务逻辑相关的功能，如权限验证、日志记录等。</li>
+</ul>
+<p>配置方式</p>
+<ul>
+<li><strong>过滤器</strong>：可以通过 web.xml 文件或注解（如<code>@WebFilter</code>）进行配置。</li>
+<li><strong>拦截器</strong>：需要在 Spring MVC 的配置类中进行配置，通过实现<code>HandlerInterceptor</code>接口并重写相应的方法，然后将拦截器注册到<code>InterceptorRegistry</code>中。</li>
+</ul>
+<p>执行顺序</p>
+<ul>
+<li><strong>过滤器</strong>：过滤器的执行顺序是根据在 web.xml 文件中配置的顺序或者注解的加载顺序来确定的。一般来说，先配置的过滤器会先执行，在请求进入 Servlet 之前，过滤器按照配置顺序依次执行；在响应返回客户端之前，过滤器按照相反的顺序依次执行。</li>
+<li><strong>拦截器</strong>：拦截器的执行顺序是根据在<code>InterceptorRegistry</code>中注册的顺序来确定的。先注册的拦截器会先执行，在请求进入 Controller 方法之前，拦截器按照注册顺序依次执行<code>preHandle</code>方法；在 Controller 方法执行完成后，拦截器按照相反的顺序依次执行<code>postHandle</code>方法；在视图渲染完成后，拦截器按照相反的顺序依次执行<code>afterCompletion</code>方法。</li>
+<li><strong>整体顺序</strong>：过滤器的执行顺序在拦截器之前。当一个请求进入 Web 应用时，首先会经过过滤器的处理，然后再进入 Spring MVC 的 DispatcherServlet，接着才会触发拦截器的执行。</li>
+</ul>
+<p>实现原理的区别</p>
+<p><strong>过滤器</strong></p>
+<ul>
+<li><strong>基于 Servlet 容器</strong>：过滤器是基于 Servlet 规范实现的，由 Servlet 容器负责管理和调用。当请求到达 Servlet 容器时，容器会根据配置的过滤器链，依次调用每个过滤器的<code>doFilter</code>方法。在<code>doFilter</code>方法中，可以对请求和响应进行预处理和后处理，然后调用<code>FilterChain</code>的<code>doFilter</code>方法将请求传递给下一个过滤器或 Servlet。</li>
+<li><strong>生命周期管理</strong>：过滤器的生命周期由 Servlet 容器管理，包括初始化（<code>init</code>方法）、执行过滤任务（<code>doFilter</code>方法）和销毁（<code>destroy</code>方法）。</li>
+</ul>
+<p><strong>拦截器</strong></p>
+<ul>
+<li><strong>基于 Spring MVC 框架</strong>：拦截器是 Spring MVC 框架提供的功能，由 Spring 容器负责管理和调用。当请求进入 Spring MVC 的 DispatcherServlet 时，DispatcherServlet 会根据配置的拦截器链，依次调用每个拦截器的<code>preHandle</code>方法。如果<code>preHandle</code>方法返回<code>true</code>，则继续执行后续的拦截器和 Controller 方法；如果返回<code>false</code>，则中断请求处理流程。在 Controller 方法执行完成后，会依次调用拦截器的<code>postHandle</code>方法；在视图渲染完成后，会依次调用拦截器的<code>afterCompletion</code>方法。</li>
+<li><strong>依赖注入</strong>：拦截器可以使用 Spring 的依赖注入功能，获取 Spring 容器中的 Bean，从而可以方便地使用 Spring 框架提供的各种服务和组件。</li>
+</ul>
+<h5 id="spring-security是基于过滤器还是拦截器？"><a href="#spring-security是基于过滤器还是拦截器？" class="headerlink" title="spring security是基于过滤器还是拦截器？"></a>spring security是基于过滤器还是拦截器？</h5><p><strong>核心原理</strong>：在 Servlet 容器里，Spring Security 借助一系列过滤器组成过滤器链。请求进入时，依次经过这些过滤器，进行身份验证、授权等安全检查。</p>
+<p><strong>与拦截器对比</strong>：拦截器是 Spring MVC 框架的功能，主要用于拦截 Controller 方法，而 Spring Security 需在请求进入 MVC 处理前就进行安全控制，过滤器更符合其在请求处理流程早期介入的需求。</p>
+<p><strong>过滤器链示例</strong>：如 <code>UsernamePasswordAuthenticationFilter</code> 处理表单登录认证，<code>BasicAuthenticationFilter</code> 处理 HTTP Basic 认证。</p>
+<ul>
+<li><h5 id="spring-security有什么过滤器？"><a href="#spring-security有什么过滤器？" class="headerlink" title="spring security有什么过滤器？"></a>spring security有什么过滤器？</h5><p><strong>UsernamePasswordAuthenticationFilter</strong>：处理基于表单的用户名和密码登录认证。</p>
+<p><strong>BasicAuthenticationFilter</strong>：处理 HTTP Basic 认证，验证请求中的基本认证信息。</p>
+<p><strong>LogoutFilter</strong>：处理用户的注销请求，清除用户的认证信息和会话。</p>
+<p><strong>CsrfFilter</strong>：处理跨站请求伪造（CSRF）保护，验证请求中的 CSRF 令牌。</p>
+</li>
+</ul>
+<h5 id="springboot如何自定义一个starter？比方说像MySQLstarter之类的"><a href="#springboot如何自定义一个starter？比方说像MySQLstarter之类的" class="headerlink" title="springboot如何自定义一个starter？比方说像MySQLstarter之类的"></a>springboot如何自定义一个starter？比方说像MySQLstarter之类的</h5><ol>
+<li><strong>项目搭建</strong>：创建 Maven 项目，设定基本的目录结构，包含 <code>autoconfigure</code>、<code>properties</code>、<code>service</code> 包以及 <code>META - INF</code> 资源目录。</li>
+<li><strong>依赖配置</strong>：在 <code>pom.xml</code> 里添加 Spring Boot 自动配置及相关功能所需依赖。</li>
+<li><strong>属性定义</strong>：创建配置属性类，使用 <code>@ConfigurationProperties</code> 注解指定配置前缀，定义可配置的属性。</li>
+<li><strong>服务编写</strong>：编写实现具体功能的服务类，该类可使用配置属性类中的配置。</li>
+<li><strong>自动配置</strong>：创建自动配置类，使用 <code>@Configuration</code> 注解，借助 <code>@ConditionalOnClass</code> 等条件注解，结合 <code>@EnableConfigurationProperties</code> 启用配置属性类，按需配置 Bean。</li>
+<li><strong>工厂配置</strong>：在 <code>META - INF/spring.factories</code> 文件中指定自动配置类，让 Spring Boot 能够识别。</li>
+<li><strong>打包使用</strong>：通过 <code>mvn clean install</code> 打包到本地 Maven 仓库，在其他 Spring Boot 项目的 <code>pom.xml</code> 中添加依赖，在 <code>application.properties</code> 里配置自定义属性，最后在代码中注入并使用服务类。</li>
+</ol>
+<ul>
+<li><h5 id="MetaInfo的配置以及用来做什么的"><a href="#MetaInfo的配置以及用来做什么的" class="headerlink" title="MetaInfo的配置以及用来做什么的"></a>MetaInfo的配置以及用来做什么的</h5><ol>
+<li><strong>spring.factories</strong>：指定自动配置类，Spring Boot 启动扫描加载，实现自动配置。</li>
+<li><strong>spring - org.springframework.boot.autoconfigure.AutoConfiguration.imports（3.0 及后）</strong>：替代前者指定自动配置类，加载性能更好。</li>
+<li><strong>additional - spring - configuration - metadata.json</strong>：提供配置属性元数据，助 IDE 实现自动补全与提示。</li>
+<li><strong>spring - schema.xsd 和 spring.handlers（少用）</strong>：前者定义 XML 配置规则，后者指定命名空间处理器，支持 XML 配置 Bean。</li>
+</ol>
+</li>
+<li><h5 id="starter的设计模式有哪些？"><a href="#starter的设计模式有哪些？" class="headerlink" title="starter的设计模式有哪些？"></a>starter的设计模式有哪些？</h5><ul>
+<li>工厂模式<ul>
+<li><strong>应用场景</strong>：在 Starter 中，通常会有一个工厂类负责创建各种 Bean 实例。例如，自定义 Starter 中创建数据库连接对象的工厂，根据配置信息创建不同类型的数据库连接。</li>
+<li><strong>作用</strong>：将对象的创建和使用分离，使得代码的耦合度降低，提高了代码的可维护性和可扩展性。用户只需要关心如何使用对象，而不必了解对象的具体创建过程。</li>
+</ul>
+</li>
+<li>单例模式<ul>
+<li><strong>应用场景</strong>：对于一些全局共享的资源或配置对象，常采用单例模式。如在 Starter 中配置的全局属性对象，整个应用中只有一个实例，供各个模块访问和使用。</li>
+<li><strong>作用</strong>：确保在整个应用程序中，某个类只有一个实例存在，节省系统资源，同时方便全局访问和管理共享资源。</li>
+</ul>
+</li>
+<li>代理模式<ul>
+<li><strong>应用场景</strong>：在 Starter 中，当需要对某些 Bean 的方法进行增强或控制访问时，可能会使用代理模式。例如，对服务层方法进行性能监控、事务管理等。</li>
+<li><strong>作用</strong>：通过代理对象来代理目标对象，在不修改目标对象代码的情况下，对目标对象的行为进行扩展和控制，实现功能的增强和复用。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h5 id="认证和鉴权的区别是什么？"><a href="#认证和鉴权的区别是什么？" class="headerlink" title="认证和鉴权的区别是什么？"></a>认证和鉴权的区别是什么？</h5><p>认证确认用户是谁的过程，验证用户的身份。例如用户名密码登录、手机验证码等。</p>
+<p>鉴权确定用户能做什么的过程，验证用户是否有权限执行特定操作。例如普通用户不能访问管理员页面。</p>
+<h5 id="为什么开发者要自创线程池而不是直接用springboot的线程池？？"><a href="#为什么开发者要自创线程池而不是直接用springboot的线程池？？" class="headerlink" title="为什么开发者要自创线程池而不是直接用springboot的线程池？？"></a>为什么开发者要自创线程池而不是直接用springboot的线程池？？</h5><ul>
+<li>自创线程池可以让开发者完全按照业务需求来定制这些参数，而不受 Spring Boot 默认配置的限制。例如，根据业务的并发特性，精确设置核心线程数、最大线程数、线程存活时间等参数，以达到最佳的性能和资源利用效率。</li>
+<li>自创线程池可以方便开发者添加自定义的线程工厂、线程命名规则、线程状态监控等功能。例如，为线程设置有意义的名称，便于在日志中追踪和排查问题；或者实现自定义的线程工厂，根据业务需求创建具有特定属性的线程</li>
+<li>当应用架构中已经存在一些自定义的组件或框架，需要与线程池进行深度集成时，自创线程池可以更好地与这些现有架构进行适配。例如，与自定义的任务调度框架、分布式锁机制等进行无缝集成，以实现更复杂的业务逻辑和并发控制。</li>
+</ul>
+<h5 id="自建线程池有哪些指标需要去监控？"><a href="#自建线程池有哪些指标需要去监控？" class="headerlink" title="自建线程池有哪些指标需要去监控？"></a>自建线程池有哪些指标需要去监控？</h5><ul>
+<li>线程池大小</li>
+<li>活跃线程数</li>
+<li>任务队列长度</li>
+<li>任务提交数/完成数</li>
+<li>线程池状态</li>
+<li>线程等待/执行时间</li>
+<li>拒绝任务数    </li>
+</ul>
+<h5 id="集群相对于单机来说，有什么不同点"><a href="#集群相对于单机来说，有什么不同点" class="headerlink" title="集群相对于单机来说，有什么不同点"></a>集群相对于单机来说，有什么不同点</h5><p>集群相对于单机的不同点：易于扩展，高性能，高可用性，但是需要额外维护成本</p>
+<h5 id="集群是如何进行同步数据的"><a href="#集群是如何进行同步数据的" class="headerlink" title="集群是如何进行同步数据的"></a>集群是如何进行同步数据的</h5><p>主从同步，增量同步，全量同步，异步复制</p>
+<p>同步的时候有一个replication buffer缓冲区，会写入同步期间新增的数据，同步完rdb之后再同步这个命令，然后重放一次</p>
+<h5 id="集群模式是否容易丢失数据？以及如何解决丢失数据的情况？"><a href="#集群模式是否容易丢失数据？以及如何解决丢失数据的情况？" class="headerlink" title="集群模式是否容易丢失数据？以及如何解决丢失数据的情况？"></a>集群模式是否容易丢失数据？以及如何解决丢失数据的情况？</h5><p>集群模式可能丢失数据，主要原因是异步复制。</p>
+<p>解决方法：开启持久化(RDB/AOF) 调整min-slaves-to-write和min-slaves-max-lag参数（拒绝写入</p>
+<h5 id="rdb和aof在使用的时候应该怎么选"><a href="#rdb和aof在使用的时候应该怎么选" class="headerlink" title="rdb和aof在使用的时候应该怎么选"></a>rdb和aof在使用的时候应该怎么选</h5><p>RDB：适合数据备份，恢复速度快，对性能影响小，但可能丢失最后一次快照后的数据 </p>
+<p>AOF：数据安全性高，支持秒级持久化，但文件较大，恢复速度慢</p>
+<p>建议同时使用：RDB做冷备，AOF做热备，利用各自优势</p>
+<h5 id="缓存穿透如果用空值法的话，如何避免大面积的内存被白白占用？"><a href="#缓存穿透如果用空值法的话，如何避免大面积的内存被白白占用？" class="headerlink" title="缓存穿透如果用空值法的话，如何避免大面积的内存被白白占用？"></a>缓存穿透如果用空值法的话，如何避免大面积的内存被白白占用？</h5><ul>
+<li>空值设置较短的TTL</li>
+<li>布隆过滤器</li>
+<li>后台任务定期检查和清理空值</li>
+</ul>
+<h5 id="redisson相比于setnx灵活在哪？"><a href="#redisson相比于setnx灵活在哪？" class="headerlink" title="redisson相比于setnx灵活在哪？"></a>redisson相比于setnx灵活在哪？</h5><ul>
+<li>同一线程可多次获取锁</li>
+<li>自动续期</li>
+<li>锁超时</li>
+<li>分布式支持</li>
+</ul>
+<h5 id="采用延迟双删的情况下，如果MySQL数据库操作失败了怎么办？"><a href="#采用延迟双删的情况下，如果MySQL数据库操作失败了怎么办？" class="headerlink" title="采用延迟双删的情况下，如果MySQL数据库操作失败了怎么办？"></a>采用延迟双删的情况下，如果MySQL数据库操作失败了怎么办？</h5><ol>
+<li><strong>事务回滚</strong>：借助数据库事务特性，在操作失败时进行回滚。在 Java 里可使用 Spring 的 <code>@Transactional</code> 注解达成，确保数据库操作的原子性，防止部分操作成功而部分失败。</li>
+<li><strong>重试机制</strong>：对失败的数据库操作设定重试次数与间隔时间。例如，可使用循环和异常捕获实现重试逻辑，避免因临时性问题（如网络抖动）造成的失败。</li>
+<li><strong>日志记录</strong>：把失败的操作记录到日志中，内容涵盖操作类型、数据信息、错误信息等。这样有助于后续排查问题，定位故障原因。</li>
+<li><strong>消息队列补偿</strong>：将失败的操作信息发送到消息队列。创建一个消费者服务，从消息队列接收这些信息，持续尝试执行数据库操作，直至成功。</li>
+</ol>
+<h5 id="redis刷新token是如何保证用户无感的"><a href="#redis刷新token是如何保证用户无感的" class="headerlink" title="redis刷新token是如何保证用户无感的"></a>redis刷新token是如何保证用户无感的</h5><ol>
+<li>使用access_token和refresh_token</li>
+<li>在access_token即将过期前自动刷新 </li>
+<li>用户活跃时延长token有效期（<strong>滑动过期机制</strong>）。当用户进行操作时，不仅仅是检查 Token 是否有效，同时也更新 Token 的过期时间</li>
+<li>客户端在后台异步刷新token </li>
+<li>token过期后短时间内仍可使用，同时刷新</li>
+</ol>
+<h5 id="mybatisplus和mybatis的区别"><a href="#mybatisplus和mybatis的区别" class="headerlink" title="mybatisplus和mybatis的区别"></a>mybatisplus和mybatis的区别</h5><p><strong>MyBatis-Plus</strong>：在 MyBatis 基础上进行了增强，提供了大量的内置方法，如单表的增删改查操作基本无需编写 SQL，通过调用框架提供的方法就能实现。同时，它还支持代码生成器，可自动生成实体类、Mapper 接口等代码，提高开发效率。</p>
+<p>代码复杂度</p>
+<ul>
+<li><strong>MyBatis</strong>：开发过程中需要开发者手动编写大量的 SQL 语句和 Mapper 接口方法，对于复杂的业务逻辑，SQL 语句的编写和维护会变得十分繁琐，代码量也会相应增加。</li>
+<li><strong>MyBatis-Plus</strong>：提供了很多便捷的方法，减少了 SQL 的编写量。开发者只需关注业务逻辑，通过调用框架提供的方法就能完成常见的数据库操作，代码更加简洁，开发效率更高。</li>
+</ul>
+<p>性能</p>
+<ul>
+<li><strong>MyBatis</strong>：由于开发者可以手动优化 SQL 语句，对于复杂的业务场景，能够通过精细的 SQL 优化实现较高的性能。</li>
+<li><strong>MyBatis-Plus</strong>：虽然内置方法方便，但在处理复杂业务时，生成的 SQL 可能不是最优的，性能上可能会有一定的损失。不过，对于大多数简单业务场景，其性能足以满足需求。</li>
+</ul>
+<h5 id="有没用过jpa"><a href="#有没用过jpa" class="headerlink" title="有没用过jpa"></a>有没用过jpa</h5><h5 id="mybatisplus用到了很多queryweb？"><a href="#mybatisplus用到了很多queryweb？" class="headerlink" title="mybatisplus用到了很多queryweb？"></a>mybatisplus用到了很多queryweb？</h5><h5 id="mybatisplus如何实现分页"><a href="#mybatisplus如何实现分页" class="headerlink" title="mybatisplus如何实现分页"></a>mybatisplus如何实现分页</h5><h5 id="多表连接怎么优化"><a href="#多表连接怎么优化" class="headerlink" title="多表连接怎么优化"></a>多表连接怎么优化</h5><ol>
+<li>减少连接表数量</li>
+<li>索引优化</li>
+<li>小表驱动大表 </li>
+<li>尽量使用内连接而非外连接</li>
+<li>将过滤条件尽量下推到基表</li>
+<li>避免笛卡尔积</li>
+</ol>
+<h5 id="多表连接的情况下，如果要分页查询该怎么改造？"><a href="#多表连接的情况下，如果要分页查询该怎么改造？" class="headerlink" title="多表连接的情况下，如果要分页查询该怎么改造？"></a>多表连接的情况下，如果要分页查询该怎么改造？</h5><ol>
+<li>先获取分页ID，再关联查询详细数据</li>
+<li>先对主表分页，再与其他表连接</li>
+<li>尽量使用索引覆盖避免回表</li>
+<li>将WHERE条件提前执行</li>
+<li>使用临时表存储中间结果</li>
+</ol>
+<h5 id="多表连接如何创建索引？联合索引是作用在哪里？"><a href="#多表连接如何创建索引？联合索引是作用在哪里？" class="headerlink" title="多表连接如何创建索引？联合索引是作用在哪里？"></a>多表连接如何创建索引？联合索引是作用在哪里？</h5><ol>
+<li>在所有JOIN条件字段上创建索引</li>
+<li>WHERE条件字段创建索引</li>
+<li>ORDER BY字段创建索引 </li>
+</ol>
+<p>联合索引作用最左前缀匹配 索引覆盖 减少回表次数 提高连接效率</p>
+<h5 id="join-from-groupby-order的执行顺序"><a href="#join-from-groupby-order的执行顺序" class="headerlink" title="join from groupby order的执行顺序"></a>join from groupby order的执行顺序</h5><p>SQL执行顺序： FROM &gt; JOIN &gt; WHERE &gt; GROUP BY &gt; HAVING &gt; SELECT &gt; DISTINCT &gt; ORDER BY &gt; LIMIT</p>
+<h5 id="MySQL内部如何提高扫描效率？"><a href="#MySQL内部如何提高扫描效率？" class="headerlink" title="MySQL内部如何提高扫描效率？"></a><strong>MySQL内部如何提高扫描效率？</strong></h5><ol>
+<li>B+树索引减少磁盘IO次数</li>
+<li>根据成本选择最优执行计划</li>
+<li>InnoDB buffer pool缓存热数据</li>
+<li>提前读取可能需要的数据页 </li>
+</ol>
+<ul>
+<li><h5 id="有什么优化器？"><a href="#有什么优化器？" class="headerlink" title="有什么优化器？"></a>有什么优化器？</h5></li>
+</ul>
+<h5 id="点赞排行如何实现？用zset的话是不是只能存储短期的数据？那如果一周之后没了该怎么办？要如何刷新？"><a href="#点赞排行如何实现？用zset的话是不是只能存储短期的数据？那如果一周之后没了该怎么办？要如何刷新？" class="headerlink" title="点赞排行如何实现？用zset的话是不是只能存储短期的数据？那如果一周之后没了该怎么办？要如何刷新？"></a>点赞排行如何实现？用zset的话是不是只能存储短期的数据？那如果一周之后没了该怎么办？要如何刷新？</h5><ol>
+<li>使用ZSET存储，score为点赞数</li>
+<li>定期将热门数据持久化到MySQL </li>
+<li>热数据保存在Redis，冷数据存入MySQL </li>
+<li>设置定时任务每天/周从MySQL加载基础数据到Redis</li>
+<li>只更新有变化的数据，而非全量刷新</li>
+</ol>
+<h5 id="如何实现乐观锁"><a href="#如何实现乐观锁" class="headerlink" title="如何实现乐观锁"></a>如何实现乐观锁</h5><ol>
+<li>表中增加version字段，更新时检查版本</li>
+<li>条件更新 UPDATE table SET data=?, version=version+1 WHERE id=? AND version=? SQL优化问题</li>
+</ol>
+</article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/%E6%A0%87%E7%AD%BE/Notes/">Notes</a></div><div class="post_share"><div class="social-share" data-image="/default_cover%20(62).png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2025/03/10/JavaNotes/" title="JavaNotes"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/default_cover%20(61).png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">JavaNotes</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2023/11/21/Computer%20Networking%EF%BC%9AA%20Top-Down%20Approach%208th%20Edition/" title="Computer Networking:A Top-Down Approach 8th Edition"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/default_cover%20(29).png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-21</div><div class="title">Computer Networking:A Top-Down Approach 8th Edition</div></div></a></div><div><a href="/2024/06/27/JSolution/" title="Leetcode_JavaSolution"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/default_cover%20(60).png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-06-27</div><div class="title">Leetcode_JavaSolution</div></div></a></div><div><a href="/2023/11/26/JZ/" title="Matrix theory"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/default_cover%20(43).png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-26</div><div class="title">Matrix theory</div></div></a></div><div><a href="/2025/03/10/JavaNotes/" title="JavaNotes"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/default_cover%20(61).png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-03-10</div><div class="title">JavaNotes</div></div></a></div><div><a href="/2024/06/05/bl/" title="Blockchain Consensus Algorithms"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/default_cover%20(49).png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-06-05</div><div class="title">Blockchain Consensus Algorithms</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%BF%87%E6%BB%A4%E5%99%A8%E5%92%8C%E6%8B%A6%E6%88%AA%E5%99%A8%E7%9A%84%E5%8C%BA%E5%88%AB%E6%98%AF%E5%95%A5%EF%BC%9F%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F%E6%98%AF%E5%95%A5%EF%BC%9F%E4%BB%A5%E5%8F%8A%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="toc-text">过滤器和拦截器的区别是啥？执行顺序是啥？以及实现原理的区别？</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#spring-security%E6%98%AF%E5%9F%BA%E4%BA%8E%E8%BF%87%E6%BB%A4%E5%99%A8%E8%BF%98%E6%98%AF%E6%8B%A6%E6%88%AA%E5%99%A8%EF%BC%9F"><span class="toc-text">spring security是基于过滤器还是拦截器？</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#spring-security%E6%9C%89%E4%BB%80%E4%B9%88%E8%BF%87%E6%BB%A4%E5%99%A8%EF%BC%9F"><span class="toc-text">spring security有什么过滤器？</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#springboot%E5%A6%82%E4%BD%95%E8%87%AA%E5%AE%9A%E4%B9%89%E4%B8%80%E4%B8%AAstarter%EF%BC%9F%E6%AF%94%E6%96%B9%E8%AF%B4%E5%83%8FMySQLstarter%E4%B9%8B%E7%B1%BB%E7%9A%84"><span class="toc-text">springboot如何自定义一个starter？比方说像MySQLstarter之类的</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#MetaInfo%E7%9A%84%E9%85%8D%E7%BD%AE%E4%BB%A5%E5%8F%8A%E7%94%A8%E6%9D%A5%E5%81%9A%E4%BB%80%E4%B9%88%E7%9A%84"><span class="toc-text">MetaInfo的配置以及用来做什么的</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#starter%E7%9A%84%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E6%9C%89%E5%93%AA%E4%BA%9B%EF%BC%9F"><span class="toc-text">starter的设计模式有哪些？</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%AE%A4%E8%AF%81%E5%92%8C%E9%89%B4%E6%9D%83%E7%9A%84%E5%8C%BA%E5%88%AB%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-text">认证和鉴权的区别是什么？</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BC%80%E5%8F%91%E8%80%85%E8%A6%81%E8%87%AA%E5%88%9B%E7%BA%BF%E7%A8%8B%E6%B1%A0%E8%80%8C%E4%B8%8D%E6%98%AF%E7%9B%B4%E6%8E%A5%E7%94%A8springboot%E7%9A%84%E7%BA%BF%E7%A8%8B%E6%B1%A0%EF%BC%9F%EF%BC%9F"><span class="toc-text">为什么开发者要自创线程池而不是直接用springboot的线程池？？</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%87%AA%E5%BB%BA%E7%BA%BF%E7%A8%8B%E6%B1%A0%E6%9C%89%E5%93%AA%E4%BA%9B%E6%8C%87%E6%A0%87%E9%9C%80%E8%A6%81%E5%8E%BB%E7%9B%91%E6%8E%A7%EF%BC%9F"><span class="toc-text">自建线程池有哪些指标需要去监控？</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%9B%86%E7%BE%A4%E7%9B%B8%E5%AF%B9%E4%BA%8E%E5%8D%95%E6%9C%BA%E6%9D%A5%E8%AF%B4%EF%BC%8C%E6%9C%89%E4%BB%80%E4%B9%88%E4%B8%8D%E5%90%8C%E7%82%B9"><span class="toc-text">集群相对于单机来说，有什么不同点</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%9B%86%E7%BE%A4%E6%98%AF%E5%A6%82%E4%BD%95%E8%BF%9B%E8%A1%8C%E5%90%8C%E6%AD%A5%E6%95%B0%E6%8D%AE%E7%9A%84"><span class="toc-text">集群是如何进行同步数据的</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%9B%86%E7%BE%A4%E6%A8%A1%E5%BC%8F%E6%98%AF%E5%90%A6%E5%AE%B9%E6%98%93%E4%B8%A2%E5%A4%B1%E6%95%B0%E6%8D%AE%EF%BC%9F%E4%BB%A5%E5%8F%8A%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E4%B8%A2%E5%A4%B1%E6%95%B0%E6%8D%AE%E7%9A%84%E6%83%85%E5%86%B5%EF%BC%9F"><span class="toc-text">集群模式是否容易丢失数据？以及如何解决丢失数据的情况？</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#rdb%E5%92%8Caof%E5%9C%A8%E4%BD%BF%E7%94%A8%E7%9A%84%E6%97%B6%E5%80%99%E5%BA%94%E8%AF%A5%E6%80%8E%E4%B9%88%E9%80%89"><span class="toc-text">rdb和aof在使用的时候应该怎么选</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F%E5%A6%82%E6%9E%9C%E7%94%A8%E7%A9%BA%E5%80%BC%E6%B3%95%E7%9A%84%E8%AF%9D%EF%BC%8C%E5%A6%82%E4%BD%95%E9%81%BF%E5%85%8D%E5%A4%A7%E9%9D%A2%E7%A7%AF%E7%9A%84%E5%86%85%E5%AD%98%E8%A2%AB%E7%99%BD%E7%99%BD%E5%8D%A0%E7%94%A8%EF%BC%9F"><span class="toc-text">缓存穿透如果用空值法的话，如何避免大面积的内存被白白占用？</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#redisson%E7%9B%B8%E6%AF%94%E4%BA%8Esetnx%E7%81%B5%E6%B4%BB%E5%9C%A8%E5%93%AA%EF%BC%9F"><span class="toc-text">redisson相比于setnx灵活在哪？</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%87%87%E7%94%A8%E5%BB%B6%E8%BF%9F%E5%8F%8C%E5%88%A0%E7%9A%84%E6%83%85%E5%86%B5%E4%B8%8B%EF%BC%8C%E5%A6%82%E6%9E%9CMySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E6%93%8D%E4%BD%9C%E5%A4%B1%E8%B4%A5%E4%BA%86%E6%80%8E%E4%B9%88%E5%8A%9E%EF%BC%9F"><span class="toc-text">采用延迟双删的情况下，如果MySQL数据库操作失败了怎么办？</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#redis%E5%88%B7%E6%96%B0token%E6%98%AF%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E7%94%A8%E6%88%B7%E6%97%A0%E6%84%9F%E7%9A%84"><span class="toc-text">redis刷新token是如何保证用户无感的</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#mybatisplus%E5%92%8Cmybatis%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-text">mybatisplus和mybatis的区别</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%9C%89%E6%B2%A1%E7%94%A8%E8%BF%87jpa"><span class="toc-text">有没用过jpa</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#mybatisplus%E7%94%A8%E5%88%B0%E4%BA%86%E5%BE%88%E5%A4%9Aqueryweb%EF%BC%9F"><span class="toc-text">mybatisplus用到了很多queryweb？</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#mybatisplus%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%88%86%E9%A1%B5"><span class="toc-text">mybatisplus如何实现分页</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%A4%9A%E8%A1%A8%E8%BF%9E%E6%8E%A5%E6%80%8E%E4%B9%88%E4%BC%98%E5%8C%96"><span class="toc-text">多表连接怎么优化</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%A4%9A%E8%A1%A8%E8%BF%9E%E6%8E%A5%E7%9A%84%E6%83%85%E5%86%B5%E4%B8%8B%EF%BC%8C%E5%A6%82%E6%9E%9C%E8%A6%81%E5%88%86%E9%A1%B5%E6%9F%A5%E8%AF%A2%E8%AF%A5%E6%80%8E%E4%B9%88%E6%94%B9%E9%80%A0%EF%BC%9F"><span class="toc-text">多表连接的情况下，如果要分页查询该怎么改造？</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%A4%9A%E8%A1%A8%E8%BF%9E%E6%8E%A5%E5%A6%82%E4%BD%95%E5%88%9B%E5%BB%BA%E7%B4%A2%E5%BC%95%EF%BC%9F%E8%81%94%E5%90%88%E7%B4%A2%E5%BC%95%E6%98%AF%E4%BD%9C%E7%94%A8%E5%9C%A8%E5%93%AA%E9%87%8C%EF%BC%9F"><span class="toc-text">多表连接如何创建索引？联合索引是作用在哪里？</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#join-from-groupby-order%E7%9A%84%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F"><span class="toc-text">join from groupby order的执行顺序</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#MySQL%E5%86%85%E9%83%A8%E5%A6%82%E4%BD%95%E6%8F%90%E9%AB%98%E6%89%AB%E6%8F%8F%E6%95%88%E7%8E%87%EF%BC%9F"><span class="toc-text">MySQL内部如何提高扫描效率？</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%9C%89%E4%BB%80%E4%B9%88%E4%BC%98%E5%8C%96%E5%99%A8%EF%BC%9F"><span class="toc-text">有什么优化器？</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%82%B9%E8%B5%9E%E6%8E%92%E8%A1%8C%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%EF%BC%9F%E7%94%A8zset%E7%9A%84%E8%AF%9D%E6%98%AF%E4%B8%8D%E6%98%AF%E5%8F%AA%E8%83%BD%E5%AD%98%E5%82%A8%E7%9F%AD%E6%9C%9F%E7%9A%84%E6%95%B0%E6%8D%AE%EF%BC%9F%E9%82%A3%E5%A6%82%E6%9E%9C%E4%B8%80%E5%91%A8%E4%B9%8B%E5%90%8E%E6%B2%A1%E4%BA%86%E8%AF%A5%E6%80%8E%E4%B9%88%E5%8A%9E%EF%BC%9F%E8%A6%81%E5%A6%82%E4%BD%95%E5%88%B7%E6%96%B0%EF%BC%9F"><span class="toc-text">点赞排行如何实现？用zset的话是不是只能存储短期的数据？那如果一周之后没了该怎么办？要如何刷新？</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E4%B9%90%E8%A7%82%E9%94%81"><span class="toc-text">如何实现乐观锁</span></a></li></ol></div></div></div></div></main><footer id="footer" style="background-image: url('/default_cover%20(62).png')"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2025 By Seelew</div><div class="footer_custom_text">I wish you to become your own sun, no need to rely on who's light.<p><a target="_blank" href="https://hexo.io/"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Frame-Hexo-blue?style=flat&logo=hexo" title="博客框架为Hexo"></a>&nbsp;<a target="_blank" href="https://butterfly.js.org/"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Theme-Butterfly-6513df?style=flat&logo=bitdefender" title="主题采用butterfly"></a>&nbsp;<a target="_blank" href="https://www.jsdelivr.com/"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/CDN-jsDelivr-orange?style=flat&logo=jsDelivr" title="本站使用JsDelivr为静态资源提供CDN加速"></a> &nbsp;<a target="_blank" href="https://vercel.com/ "><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Hosted-Vervel-brightgreen?style=flat&logo=Vercel" title="本站采用双线部署，默认线路托管于Vercel"></a>&nbsp;<a target="_blank" href="https://vercel.com/ "><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Hosted-Coding-0cedbe?style=flat&logo=Codio" title="本站采用双线部署，联通线路托管于Coding"></a>&nbsp;<a target="_blank" href="https://github.com/"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Source-Github-d021d6?style=flat&logo=GitHub" title="本站项目由Gtihub托管"></a>&nbsp;<a target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Copyright-BY--NC--SA%204.0-d42328?style=flat&logo=Claris" title="本站采用知识共享署名-非商业性使用-相同方式共享4.0国际许可协议进行许可"></a></p></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, '']
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script></div><script async src="/js/title.js"></script><canvas id="universe"></canvas><script defer src="/js/universe.js"></script><canvas id="snow"></canvas><script async src="/js/snow.js"></script><script id="canvas_nest" defer="defer" color="255,255,255" opacity="0.7" zIndex="-1" count="30" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div>
+        <style>
+            [bg-lazy] {
+                background-image: none !important;
+                background-color: #eee !important;
+            }
+        </style>
+        <script>
+            window.imageLazyLoadSetting = {
+                isSPA: false,
+                preloadRatio: 1,
+                processImages: null,
+            };
+        </script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z\d\-\.\+]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(t.test(e.href)||r.test(e.href))&&(e.href=a.dataset.original)})});</script><script>(r=>{r.imageLazyLoadSetting.processImages=t;var a=r.imageLazyLoadSetting.isSPA,o=r.imageLazyLoadSetting.preloadRatio||1,d=i();function i(){var t=Array.prototype.slice.call(document.querySelectorAll("img[data-original]")),e=Array.prototype.slice.call(document.querySelectorAll("[bg-lazy]"));return t.concat(e)}function t(t){(a||t)&&(d=i());for(var e,n=0;n<d.length;n++)0<=(e=(e=d[n]).getBoundingClientRect()).bottom&&0<=e.left&&e.top<=(r.innerHeight*o||document.documentElement.clientHeight*o)&&(()=>{var t,e,a,o,i=d[n];e=function(){d=d.filter(function(t){return i!==t}),r.imageLazyLoadSetting.onImageLoaded&&r.imageLazyLoadSetting.onImageLoaded(i)},(t=i).dataset.loaded||(t.hasAttribute("bg-lazy")?(t.removeAttribute("bg-lazy"),e&&e()):(a=new Image,o=t.getAttribute("data-original"),a.onload=function(){t.src=o,t.removeAttribute("data-original"),t.setAttribute("data-loaded",!0),e&&e()},a.onerror=function(){t.removeAttribute("data-original"),t.setAttribute("data-loaded",!1),t.src=o},t.src!==o&&(a.src=o)))})()}function e(){clearTimeout(t.tId),t.tId=setTimeout(t,500)}t(),document.addEventListener("scroll",e),r.addEventListener("resize",e),r.addEventListener("orientationchange",e)})(this);</script></body></html>
